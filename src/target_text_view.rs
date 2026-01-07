@@ -45,7 +45,7 @@ mod imp {
 
 impl imp::TargetTextView {
     fn setup_text_view(&self) {
-        self.text_view.set_can_focus(false);
+        self.text_view.set_can_target(false);
         self.text_view.set_cursor_visible(false);
         self.text_view.set_monospace(true);
     }
@@ -55,29 +55,26 @@ impl imp::TargetTextView {
         let buffer = self.text_view.buffer();
 
         let mut iter = buffer.start_iter();
-        if iter.forward_chars(cursor_pos) {
-            let rect = self.text_view.iter_location(&iter);
+        iter.forward_chars(cursor_pos);
+        let rect = self.text_view.iter_location(&iter);
 
-            // Convert text view coordinates to widget coordinates
-            let (x, y) = self.text_view.buffer_to_window_coords(
-                gtk::TextWindowType::Widget,
-                rect.x(),
-                rect.y(),
-            );
+        // Convert text view coordinates to widget coordinates
+        let (x, y) =
+            self.text_view
+                .buffer_to_window_coords(gtk::TextWindowType::Widget, rect.x(), rect.y());
 
-            // Get the text view's allocation to offset properly
-            let allocation = self.text_view.allocation();
-            let final_x = allocation.x() + x;
-            let final_y = allocation.y() + y;
+        // Get the text view's allocation to offset properly
+        let allocation = self.text_view.allocation();
+        let final_x = allocation.x() + x;
+        let final_y = allocation.y() + y;
 
-            // Get caret color from style context
-            let style_ctx = self.obj().style_context();
-            let color = style_ctx.color();
+        // Get caret color from style context
+        let style_ctx = self.obj().style_context();
+        let color = style_ctx.color();
 
-            let cursor_rect =
-                gtk::graphene::Rect::new(final_x as f32, final_y as f32, 2.0, rect.height() as f32);
-            snapshot.append_color(&color, &cursor_rect);
-        }
+        let cursor_rect =
+            gtk::graphene::Rect::new(final_x as f32, final_y as f32, 2.0, rect.height() as f32);
+        snapshot.append_color(&color, &cursor_rect);
     }
 }
 
