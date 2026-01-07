@@ -12,7 +12,7 @@ mod imp {
     }
 
     #[glib::object_subclass]
-    impl ObjectSubclass for MainMenu {
+    impl ObjectSubclass for MainActionList {
         const NAME: &'static str = "MainActionList";
         type Type = super::MainActionList;
         type ParentType = gtk::Box;
@@ -26,14 +26,14 @@ mod imp {
         }
     }
 
-    impl ObjectImpl for MainMenu {
+    impl ObjectImpl for MainActionList {
         fn constructed(&self) {
             self.parent_constructed();
             self.setup_actions();
         }
     }
-    impl WidgetImpl for MainMenu {}
-    impl BoxImpl for MainMenu {}
+    impl WidgetImpl for MainActionList {}
+    impl BoxImpl for MainActionList {}
 }
 
 impl imp::MainActionList {

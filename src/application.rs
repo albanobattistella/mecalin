@@ -1,5 +1,7 @@
 use gtk::prelude::*;
+use gtk::subclass::prelude::*;
 use libadwaita as adw;
+use libadwaita::subclass::prelude::*;
 use gio::prelude::*;
 
 use crate::window::MecalinWindow;
@@ -21,7 +23,7 @@ mod imp {
     impl ApplicationImpl for MecalinApplication {
         fn activate(&self) {
             let app = self.obj();
-            let window = MecalinWindow::new(&app);
+            let window = MecalinWindow::new(app.upcast_ref());
             window.present();
         }
     }

@@ -4,20 +4,24 @@
     <property name="title">Mecalin</property>
     <property name="default-width">800</property>
     <property name="default-height">600</property>
-    <child type="titlebar">
-      <object class="AdwHeaderBar" id="header_bar"/>
-    </child>
     <property name="content">
-      <object class="GtkStack" id="main_stack">
-        <property name="transition-type">slide-left-right</property>
-        <child>
-          <object class="GtkStackPage">
-            <property name="name">main_menu</property>
-            <property name="child">
-              <object class="MainActionList" id="main_action_list_widget"/>
-            </property>
-          </object>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar" id="header_bar"/>
         </child>
+        <property name="content">
+          <object class="GtkStack" id="main_stack">
+            <property name="transition-type">slide-left-right</property>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">main_menu</property>
+                <property name="child">
+                  <object class="MainActionList" id="main_action_list_widget"/>
+                </property>
+              </object>
+            </child>
+          </object>
+        </property>
       </object>
     </property>
   </template>

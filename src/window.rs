@@ -1,6 +1,7 @@
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use libadwaita as adw;
+use libadwaita::subclass::prelude::*;
 
 use crate::main_action_list::MainActionList;
 
