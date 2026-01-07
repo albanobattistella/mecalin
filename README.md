@@ -2,21 +2,25 @@
 
 A GTK4 application written in Rust using Adwaita and built with Meson.
 
-## Building
+## Quick Start
 
 ```bash
+# Development
+cargo run
+
+# Production build
 meson setup builddir
 meson compile -C builddir
-```
-
-## Running
-
-```bash
 ./builddir/mecalin
 ```
 
-Or for development:
+## Dependencies
 
-```bash
-cargo run
-```
+- GTK4 4.10+
+- libadwaita 1.5+
+- Rust toolchain
+- Meson build system
+
+## Architecture
+
+Uses GTK Builder with XML UI templates and GResource embedding for a modern GNOME application structure.
