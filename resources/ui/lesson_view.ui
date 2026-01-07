@@ -10,7 +10,6 @@
     <child>
       <object class="GtkLabel" id="lesson_title">
         <property name="halign">center</property>
-        <property name="text">Lesson 1</property>
         <style>
           <class name="title-1"/>
         </style>
@@ -21,7 +20,6 @@
         <property name="halign">center</property>
         <property name="wrap">true</property>
         <property name="justify">center</property>
-        <property name="text">Learn the basic home row keys</property>
         <style>
           <class name="body"/>
         </style>

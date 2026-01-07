@@ -1,6 +1,9 @@
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 
+use crate::lesson_view::LessonView;
+use crate::course::{Course, Lesson};
+
 mod imp {
     use super::*;
 
@@ -9,6 +12,12 @@ mod imp {
     pub struct StudyRoom {
         #[template_child]
         pub lesson_list: TemplateChild<gtk::ListBox>,
+        #[template_child]
+        pub main_stack: TemplateChild<gtk::Stack>,
+        #[template_child]
+        pub lesson_view_widget: TemplateChild<LessonView>,
+        
+        pub course: std::cell::RefCell<Option<Course>>,
     }
 
     #[glib::object_subclass]
@@ -30,6 +39,7 @@ mod imp {
         fn constructed(&self) {
             self.parent_constructed();
             self.setup_room();
+            self.setup_signals();
         }
     }
     impl WidgetImpl for StudyRoom {}
@@ -38,6 +48,9 @@ mod imp {
 
 impl imp::StudyRoom {
     fn setup_room(&self) {
+        let course = Course::new().unwrap_or_default();
+        *self.course.borrow_mut() = Some(course);
+        
         let lessons = [
             ("Start Course", "Begin or continue typing lessons"),
             ("Lesson Review", "Review previous lessons"),
@@ -71,6 +84,17 @@ impl imp::StudyRoom {
             self.lesson_list.append(&row);
         }
     }
+
+    fn setup_signals(&self) {
+        let obj = self.obj().downgrade();
+        self.lesson_list.connect_row_activated(move |_, row| {
+            if row.index() == 0 {
+                if let Some(study_room) = obj.upgrade() {
+                    study_room.show_first_lesson();
+                }
+            }
+        });
+    }
 }
 
 glib::wrapper! {
@@ -82,5 +106,15 @@ glib::wrapper! {
 impl StudyRoom {
     pub fn new() -> Self {
         glib::Object::new()
+    }
+
+    pub fn show_first_lesson(&self) {
+        let imp = self.imp();
+        if let Some(course) = imp.course.borrow().as_ref() {
+            if let Some(lesson) = course.get_lesson(1) {
+                imp.lesson_view_widget.set_lesson(lesson);
+                imp.main_stack.set_visible_child_name("lesson_view");
+            }
+        }
     }
 }
