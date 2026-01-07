@@ -18,7 +18,6 @@
             <property name="margin-end">12</property>
             <style>
               <class name="monospace"/>
-              <class name="card"/>
             </style>
           </object>
         </child>
