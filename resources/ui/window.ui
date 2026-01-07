@@ -14,7 +14,7 @@
           <object class="GtkStackPage">
             <property name="name">main_menu</property>
             <property name="child">
-              <object class="MainMenu" id="main_menu_widget"/>
+              <object class="MainActionList" id="main_action_list_widget"/>
             </property>
           </object>
         </child>

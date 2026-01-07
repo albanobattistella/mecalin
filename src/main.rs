@@ -1,7 +1,7 @@
 use gio::prelude::*;
 
 mod application;
-mod main_menu;
+mod main_action_list;
 mod window;
 
 use application::MecalinApplication;

@@ -5,16 +5,16 @@ mod imp {
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate)]
-    #[template(resource = "/org/gnome/mecalin/ui/main_menu.ui")]
-    pub struct MainMenu {
+    #[template(resource = "/org/gnome/mecalin/ui/main_action_list.ui")]
+    pub struct MainActionList {
         #[template_child]
         pub action_list: TemplateChild<gtk::ListBox>,
     }
 
     #[glib::object_subclass]
     impl ObjectSubclass for MainMenu {
-        const NAME: &'static str = "MainMenu";
-        type Type = super::MainMenu;
+        const NAME: &'static str = "MainActionList";
+        type Type = super::MainActionList;
         type ParentType = gtk::Box;
 
         fn class_init(klass: &mut Self::Class) {
@@ -36,7 +36,7 @@ mod imp {
     impl BoxImpl for MainMenu {}
 }
 
-impl imp::MainMenu {
+impl imp::MainActionList {
     fn setup_actions(&self) {
         let actions = [
             ("Study room", "Learn typing fundamentals"),
@@ -74,12 +74,12 @@ impl imp::MainMenu {
 }
 
 glib::wrapper! {
-    pub struct MainMenu(ObjectSubclass<imp::MainMenu>)
+    pub struct MainActionList(ObjectSubclass<imp::MainActionList>)
         @extends gtk::Box, gtk::Widget,
         @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
 }
 
-impl MainMenu {
+impl MainActionList {
     pub fn new() -> Self {
         glib::Object::new()
     }

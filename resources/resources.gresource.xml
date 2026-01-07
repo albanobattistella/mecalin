@@ -2,6 +2,6 @@
 <gresources>
   <gresource prefix="/org/gnome/mecalin">
     <file preprocess="xml-stripblanks">ui/window.ui</file>
-    <file preprocess="xml-stripblanks">ui/main_menu.ui</file>
+    <file preprocess="xml-stripblanks">ui/main_action_list.ui</file>
   </gresource>
 </gresources>

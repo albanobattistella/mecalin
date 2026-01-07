@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="MainMenu" parent="GtkBox">
+  <template class="MainActionList" parent="GtkBox">
     <property name="orientation">vertical</property>
     <property name="spacing">24</property>
     <property name="margin-top">24</property>
