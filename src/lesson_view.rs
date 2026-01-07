@@ -65,21 +65,60 @@ impl imp::LessonView {
         if let Some(keyboard) = keyboard_widget.as_ref() {
             let keyboard_clone = keyboard.clone();
             let target_text_view = self.target_text_view.clone();
+            let target_text_view_clone = self.target_text_view.clone();
 
             let buffer = self.text_view.text_view().buffer();
-            buffer.connect_changed(move |buffer| {
-                let text = buffer.text(&buffer.start_iter(), &buffer.end_iter(), false);
-                let cursor_pos = text.chars().count();
+            buffer.connect_insert_text(move |buffer, _iter, text| {
+                let current_text = buffer.text(&buffer.start_iter(), &buffer.end_iter(), false);
+                let target_buffer = target_text_view.text_view().buffer();
+                let target_text = target_buffer.text(
+                    &target_buffer.start_iter(),
+                    &target_buffer.end_iter(),
+                    false,
+                );
 
-                // Update keyboard highlighting
-                if let Some(last_char) = text.chars().last() {
-                    keyboard_clone.set_current_key(Some(last_char));
-                } else {
-                    keyboard_clone.set_current_key(None);
+                let current_str = current_text.as_str();
+                let target_str = target_text.as_str();
+                let new_text = format!("{}{}", current_str, text);
+
+                // Check if the new text would match target text
+                if !target_str.starts_with(&new_text) {
+                    // Find the last space position or go to beginning
+                    let last_space_pos = current_str.rfind(' ').map(|pos| pos + 1).unwrap_or(0);
+
+                    // Reset to last space position
+                    let corrected_text = &current_str[..last_space_pos];
+
+                    glib::idle_add_local_once({
+                        let buffer = buffer.clone();
+                        let corrected_text = corrected_text.to_string();
+                        move || {
+                            buffer.set_text(&corrected_text);
+                            let end_iter = buffer.end_iter();
+                            buffer.place_cursor(&end_iter);
+                        }
+                    });
                 }
+            });
 
-                // Update cursor position in target text view
-                target_text_view.set_cursor_position(cursor_pos as i32);
+            buffer.connect_changed(move |buffer| {
+                let typed_text = buffer.text(&buffer.start_iter(), &buffer.end_iter(), false);
+                let target_buffer = target_text_view_clone.text_view().buffer();
+                let target_text = target_buffer.text(
+                    &target_buffer.start_iter(),
+                    &target_buffer.end_iter(),
+                    false,
+                );
+
+                let typed_str = typed_text.as_str();
+                let target_str = target_text.as_str();
+
+                let cursor_pos = typed_str.chars().count() as i32;
+                target_text_view_clone.set_cursor_position(cursor_pos);
+
+                // Update keyboard highlighting for next character
+                let next_char = target_str.chars().nth(cursor_pos as usize);
+                keyboard_clone.set_current_key(next_char);
             });
         }
     }
