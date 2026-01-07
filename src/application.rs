@@ -1,0 +1,44 @@
+use gtk::prelude::*;
+use libadwaita as adw;
+use gio::prelude::*;
+
+use crate::window::MecalinWindow;
+
+mod imp {
+    use super::*;
+
+    #[derive(Default)]
+    pub struct MecalinApplication;
+
+    #[glib::object_subclass]
+    impl ObjectSubclass for MecalinApplication {
+        const NAME: &'static str = "MecalinApplication";
+        type Type = super::MecalinApplication;
+        type ParentType = adw::Application;
+    }
+
+    impl ObjectImpl for MecalinApplication {}
+    impl ApplicationImpl for MecalinApplication {
+        fn activate(&self) {
+            let app = self.obj();
+            let window = MecalinWindow::new(&app);
+            window.present();
+        }
+    }
+    impl GtkApplicationImpl for MecalinApplication {}
+    impl AdwApplicationImpl for MecalinApplication {}
+}
+
+glib::wrapper! {
+    pub struct MecalinApplication(ObjectSubclass<imp::MecalinApplication>)
+        @extends adw::Application, gtk::Application, gio::Application,
+        @implements gio::ActionGroup, gio::ActionMap;
+}
+
+impl MecalinApplication {
+    pub fn new() -> Self {
+        glib::Object::builder()
+            .property("application-id", "com.example.mecalin")
+            .build()
+    }
+}
