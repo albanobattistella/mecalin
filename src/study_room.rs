@@ -18,6 +18,7 @@ mod imp {
         pub lesson_view_widget: TemplateChild<LessonView>,
         
         pub course: std::cell::RefCell<Option<Course>>,
+        pub settings: std::cell::RefCell<Option<gio::Settings>>,
     }
 
     #[glib::object_subclass]
@@ -50,6 +51,10 @@ impl imp::StudyRoom {
     fn setup_room(&self) {
         let course = Course::new().unwrap_or_default();
         *self.course.borrow_mut() = Some(course);
+        
+        // TODO: Enable settings when schema is properly installed
+        // let settings = gio::Settings::new("org.gnome.mecalin");
+        // *self.settings.borrow_mut() = Some(settings);
         
         let lessons = [
             ("Start Course", "Begin or continue typing lessons"),
@@ -111,7 +116,13 @@ impl StudyRoom {
     pub fn show_first_lesson(&self) {
         let imp = self.imp();
         if let Some(course) = imp.course.borrow().as_ref() {
-            if let Some(lesson) = course.get_lesson(1) {
+            let current_lesson = if let Some(settings) = imp.settings.borrow().as_ref() {
+                settings.uint("current-lesson")
+            } else {
+                1 // Default to lesson 1 if no settings
+            };
+            
+            if let Some(lesson) = course.get_lesson(current_lesson) {
                 imp.lesson_view_widget.set_lesson(lesson);
                 imp.main_stack.set_visible_child_name("lesson_view");
             }

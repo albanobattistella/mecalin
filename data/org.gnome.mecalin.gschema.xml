@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.mecalin" path="/org/gnome/mecalin/">
+    <key name="current-lesson" type="u">
+      <default>1</default>
+      <summary>Current lesson</summary>
+      <description>The current lesson number the user is on</description>
+    </key>
+    <key name="current-step" type="u">
+      <default>1</default>
+      <summary>Current step</summary>
+      <description>The current step within the lesson</description>
+    </key>
+  </schema>
+</schemalist>
