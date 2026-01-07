@@ -39,7 +39,10 @@ mod imp {
         fn signals() -> &'static [glib::subclass::Signal] {
             static SIGNALS: std::sync::OnceLock<Vec<glib::subclass::Signal>> = std::sync::OnceLock::new();
             SIGNALS.get_or_init(|| {
-                vec![glib::subclass::Signal::builder("study-room-selected").build()]
+                vec![
+                    glib::subclass::Signal::builder("study-room-selected").build(),
+                    glib::subclass::Signal::builder("about-selected").build(),
+                ]
             })
         }
     }
@@ -86,9 +89,11 @@ impl imp::MainActionList {
     fn setup_signals(&self) {
         let obj = self.obj().downgrade();
         self.action_list.connect_row_activated(move |_, row| {
-            if row.index() == 0 {
-                if let Some(obj) = obj.upgrade() {
-                    obj.emit_by_name::<()>("study-room-selected", &[]);
+            if let Some(obj) = obj.upgrade() {
+                match row.index() {
+                    0 => obj.emit_by_name::<()>("study-room-selected", &[]),
+                    4 => obj.emit_by_name::<()>("about-selected", &[]),
+                    _ => {}
                 }
             }
         });

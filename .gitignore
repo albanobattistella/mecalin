@@ -1,4 +1,5 @@
 /target/
+src/config.rs
 Cargo.lock
 .builddir/
 build/

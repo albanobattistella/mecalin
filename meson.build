@@ -14,10 +14,27 @@ adwaita_dep = dependency('libadwaita-1', version: '>= 1.5')
 
 gettext_package = meson.project_name()
 localedir = get_option('prefix') / get_option('localedir')
+application_id = 'org.gnome.mecalin'
 
 conf = configuration_data()
 conf.set_quoted('LOCALEDIR', localedir)
 conf.set_quoted('GETTEXT_PACKAGE', gettext_package)
+conf.set_quoted('VERSION', meson.project_version())
+conf.set_quoted('APPLICATION_ID', application_id)
+
+configure_file(
+  input: 'src/config.rs.in',
+  output: 'config.rs',
+  configuration: conf,
+)
+
+# Copy the config.rs output to the source directory.
+run_command(
+  'cp',
+  meson.project_build_root() / 'config.rs',
+  meson.project_source_root() / 'src' / 'config.rs',
+  check: true,
+)
 
 cargo_options = ['--manifest-path', meson.project_source_root() / 'Cargo.toml']
 cargo_env = environment()

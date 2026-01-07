@@ -2,11 +2,13 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use libadwaita as adw;
 use libadwaita::subclass::prelude::*;
+use libadwaita::prelude::AdwDialogExt;
 
 use crate::main_action_list::MainActionList;
 use crate::study_room::StudyRoom;
 use crate::lesson_view::LessonView;
 use crate::text_view::TextView;
+use crate::config;
 
 mod imp {
     use super::*;
@@ -69,6 +71,21 @@ impl MecalinWindow {
         let imp = self.imp();
         imp.main_stack.set_visible_child_name("study_room");
     }
+
+    pub fn show_about(&self) {
+        let about = adw::AboutDialog::builder()
+            .application_name("Mecalin")
+            .application_icon(config::APPLICATION_ID)
+            .developer_name("Ignacio Casal Quinteiro")
+            .version(config::VERSION)
+            .website("https://github.com/mecalin/mecalin")
+            .issue_url("https://github.com/mecalin/mecalin/issues")
+            .copyright("© 2026 Ignacio Casal Quinteiro")
+            .license_type(gtk::License::Gpl20)
+            .build();
+
+        about.present(Some(self));
+    }
 }
 
 impl imp::MecalinWindow {
@@ -77,6 +94,14 @@ impl imp::MecalinWindow {
         self.main_action_list_widget.connect_local("study-room-selected", false, move |_| {
             if let Some(window) = window.upgrade() {
                 window.show_study_room();
+            }
+            None
+        });
+        
+        let window = self.obj().downgrade();
+        self.main_action_list_widget.connect_local("about-selected", false, move |_| {
+            if let Some(window) = window.upgrade() {
+                window.show_about();
             }
             None
         });
