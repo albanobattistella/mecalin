@@ -8,6 +8,7 @@ use crate::config;
 use crate::lesson_view::LessonView;
 use crate::main_action_list::MainActionList;
 use crate::study_room::StudyRoom;
+use crate::target_text_view::TargetTextView;
 use crate::text_view::TextView;
 
 mod imp {
@@ -35,6 +36,7 @@ mod imp {
             StudyRoom::ensure_type();
             LessonView::ensure_type();
             TextView::ensure_type();
+            TargetTextView::ensure_type();
             klass.bind_template();
         }
 

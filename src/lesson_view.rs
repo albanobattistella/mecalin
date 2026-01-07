@@ -4,6 +4,7 @@ use gtk::subclass::prelude::*;
 
 use crate::course::Lesson;
 use crate::keyboard_widget::KeyboardWidget;
+use crate::target_text_view::TargetTextView;
 use crate::text_view::TextView;
 
 mod imp {
@@ -17,7 +18,7 @@ mod imp {
         #[template_child]
         pub lesson_description: TemplateChild<gtk::Label>,
         #[template_child]
-        pub target_text_view: TemplateChild<gtk::TextView>,
+        pub target_text_view: TemplateChild<TargetTextView>,
         #[template_child]
         pub text_view: TemplateChild<TextView>,
         #[template_child]
@@ -46,7 +47,6 @@ mod imp {
             self.parent_constructed();
             self.setup_keyboard();
             self.setup_signals();
-            self.setup_target_text_view();
         }
     }
     impl WidgetImpl for LessonView {}
@@ -79,22 +79,9 @@ impl imp::LessonView {
                 }
 
                 // Update cursor position in target text view
-                let target_buffer = target_text_view.buffer();
-                let mut iter = target_buffer.start_iter();
-                iter.forward_chars(cursor_pos as i32);
-                target_buffer.place_cursor(&iter);
+                target_text_view.set_cursor_position(cursor_pos as i32);
             });
         }
-    }
-
-    fn setup_target_text_view(&self) {
-        self.target_text_view.set_can_focus(false);
-        self.target_text_view.set_can_target(false);
-        self.target_text_view.set_editable(false);
-        self.target_text_view.set_monospace(true);
-
-        // Ensure cursor remains visible even when not focused
-        self.target_text_view.set_cursor_visible(true);
     }
 }
 
@@ -117,10 +104,7 @@ impl LessonView {
 
         // Set the first step's text as target text
         if let Some(first_step) = lesson.steps.first() {
-            let target_buffer = imp.target_text_view.buffer();
-            target_buffer.set_text(&first_step.text);
-            // Place cursor at the beginning
-            target_buffer.place_cursor(&target_buffer.start_iter());
+            imp.target_text_view.set_text(&first_step.text);
         }
 
         imp.text_view.set_text("");
