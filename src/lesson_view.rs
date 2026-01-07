@@ -25,6 +25,8 @@ mod imp {
         pub keyboard_container: TemplateChild<gtk::Box>,
 
         pub keyboard_widget: std::cell::RefCell<Option<KeyboardWidget>>,
+        pub current_lesson: std::cell::RefCell<Option<Lesson>>,
+        pub current_step_index: std::cell::Cell<usize>,
     }
 
     #[glib::object_subclass]
@@ -66,6 +68,7 @@ impl imp::LessonView {
             let keyboard_clone = keyboard.clone();
             let target_text_view = self.target_text_view.clone();
             let target_text_view_clone = self.target_text_view.clone();
+            let lesson_view_clone = self.obj().downgrade();
 
             let buffer = self.text_view.text_view().buffer();
             buffer.connect_insert_text(move |buffer, _iter, text| {
@@ -116,6 +119,20 @@ impl imp::LessonView {
                 let cursor_pos = typed_str.chars().count() as i32;
                 target_text_view_clone.set_cursor_position(cursor_pos);
 
+                // Check if step is completed
+                if typed_str == target_str && !target_str.is_empty() {
+                    // Step completed - advance to next step or lesson
+                    glib::idle_add_local_once({
+                        let lesson_view = lesson_view_clone.clone();
+                        move || {
+                            if let Some(lesson_view) = lesson_view.upgrade() {
+                                lesson_view.advance_to_next_step();
+                            }
+                        }
+                    });
+                    return;
+                }
+
                 // Update keyboard highlighting for next character
                 let next_char = target_str.chars().nth(cursor_pos as usize);
                 keyboard_clone.set_current_key(next_char);
@@ -141,6 +158,10 @@ impl LessonView {
         imp.lesson_title.set_text(&title);
         imp.lesson_description.set_text(&lesson.description);
 
+        // Store the lesson and reset step index
+        *imp.current_lesson.borrow_mut() = Some(lesson.clone());
+        imp.current_step_index.set(0);
+
         // Set the first step's text as target text
         if let Some(first_step) = lesson.steps.first() {
             imp.target_text_view.set_text(&first_step.text);
@@ -160,5 +181,41 @@ impl LessonView {
         }
 
         imp.text_view.set_text("");
+    }
+
+    pub fn advance_to_next_step(&self) {
+        let imp = self.imp();
+        let current_lesson = imp.current_lesson.borrow();
+
+        if let Some(lesson) = current_lesson.as_ref() {
+            let current_step = imp.current_step_index.get();
+            let next_step = current_step + 1;
+
+            if next_step < lesson.steps.len() {
+                // Move to next step
+                imp.current_step_index.set(next_step);
+                let step = &lesson.steps[next_step];
+                imp.target_text_view.set_text(&step.text);
+                imp.text_view.set_text("");
+
+                // Update keyboard for new step
+                let mut target_keys = std::collections::HashSet::new();
+                for ch in step.text.chars() {
+                    if ch.is_alphabetic() || ch == ' ' {
+                        target_keys.insert(ch.to_lowercase().next().unwrap_or(ch));
+                    }
+                }
+
+                let keyboard_widget = imp.keyboard_widget.borrow();
+                if let Some(keyboard) = keyboard_widget.as_ref() {
+                    keyboard.set_visible_keys(Some(target_keys));
+                }
+            } else {
+                // Lesson completed - could emit signal or show completion message
+                imp.target_text_view
+                    .set_text("Lesson completed! Well done!");
+                imp.text_view.set_text("");
+            }
+        }
     }
 }
