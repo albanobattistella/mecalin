@@ -1,6 +1,6 @@
-use gettextrs::gettext;
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
+use i18n_format::i18n_fmt;
 
 use crate::course::Lesson;
 use crate::keyboard_widget::KeyboardWidget;
@@ -98,7 +98,7 @@ impl LessonView {
 
     pub fn set_lesson(&self, lesson: &Lesson) {
         let imp = self.imp();
-        let title = format!("{} {}", gettext("Lesson"), lesson.id);
+        let title = i18n_fmt! { i18n_fmt("Lesson {}", lesson.id) };
         imp.lesson_title.set_text(&title);
         imp.lesson_description.set_text(&lesson.description);
 
