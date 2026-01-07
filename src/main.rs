@@ -2,6 +2,7 @@ use gio::prelude::*;
 
 mod application;
 mod main_action_list;
+mod study_room;
 mod window;
 
 use application::MecalinApplication;

@@ -19,6 +19,9 @@ mod imp {
 
         fn class_init(klass: &mut Self::Class) {
             klass.bind_template();
+            klass.install_action("action.study-room", None, |obj, _, _| {
+                obj.emit_by_name::<()>("study-room-selected", &[]);
+            });
         }
 
         fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
@@ -30,6 +33,14 @@ mod imp {
         fn constructed(&self) {
             self.parent_constructed();
             self.setup_actions();
+            self.setup_signals();
+        }
+
+        fn signals() -> &'static [glib::subclass::Signal] {
+            static SIGNALS: std::sync::OnceLock<Vec<glib::subclass::Signal>> = std::sync::OnceLock::new();
+            SIGNALS.get_or_init(|| {
+                vec![glib::subclass::Signal::builder("study-room-selected").build()]
+            })
         }
     }
     impl WidgetImpl for MainActionList {}
@@ -70,6 +81,17 @@ impl imp::MainActionList {
             
             self.action_list.append(&row);
         }
+    }
+
+    fn setup_signals(&self) {
+        let obj = self.obj().downgrade();
+        self.action_list.connect_row_activated(move |_, row| {
+            if row.index() == 0 {
+                if let Some(obj) = obj.upgrade() {
+                    obj.emit_by_name::<()>("study-room-selected", &[]);
+                }
+            }
+        });
     }
 }
 

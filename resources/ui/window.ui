@@ -20,6 +20,14 @@
                 </property>
               </object>
             </child>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">study_room</property>
+                <property name="child">
+                  <object class="StudyRoom" id="study_room_widget"/>
+                </property>
+              </object>
+            </child>
           </object>
         </property>
       </object>
