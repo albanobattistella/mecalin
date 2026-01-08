@@ -11,8 +11,9 @@ use crate::text_view::TextView;
 mod imp {
     use super::*;
 
-    #[derive(Default, gtk::CompositeTemplate)]
+    #[derive(Default, gtk::CompositeTemplate, glib::Properties)]
     #[template(resource = "/org/gnome/mecalin/ui/lesson_view.ui")]
+    #[properties(wrapper_type = super::LessonView)]
     pub struct LessonView {
         #[template_child]
         pub lesson_title: TemplateChild<gtk::Label>,
@@ -26,7 +27,8 @@ mod imp {
         pub keyboard_container: TemplateChild<gtk::Box>,
 
         pub keyboard_widget: RefCell<Option<KeyboardWidget>>,
-        pub current_lesson: RefCell<Option<Lesson>>,
+        #[property(get, set, nullable)]
+        pub current_lesson: RefCell<Option<glib::BoxedAnyObject>>,
         pub current_step_index: Cell<usize>,
         pub course: RefCell<Option<crate::course::Course>>,
     }
@@ -156,13 +158,14 @@ impl LessonView {
     }
 
     pub fn set_lesson(&self, lesson: &Lesson) {
+        self.set_current_lesson(Some(glib::BoxedAnyObject::new(lesson.clone())));
+        
         let imp = self.imp();
         let title = i18n_fmt! { i18n_fmt("Lesson {}", lesson.id) };
         imp.lesson_title.set_text(&title);
         imp.lesson_description.set_text(&lesson.description);
 
-        // Store the lesson and reset step index
-        *imp.current_lesson.borrow_mut() = Some(lesson.clone());
+        // Reset step index
         imp.current_step_index.set(0);
 
         // Set the first step's text as target text
@@ -196,9 +199,13 @@ impl LessonView {
 
         // Get the current lesson info without borrowing
         let (current_lesson_id, current_step, total_steps) = {
-            let current_lesson = imp.current_lesson.borrow();
-            if let Some(lesson) = current_lesson.as_ref() {
-                (lesson.id, imp.current_step_index.get(), lesson.steps.len())
+            let current_lesson_boxed = imp.current_lesson.borrow();
+            if let Some(boxed) = current_lesson_boxed.as_ref() {
+                if let Ok(lesson) = boxed.try_borrow::<Lesson>() {
+                    (lesson.id, imp.current_step_index.get(), lesson.steps.len())
+                } else {
+                    return;
+                }
             } else {
                 return;
             }
@@ -211,10 +218,16 @@ impl LessonView {
             imp.current_step_index.set(next_step);
 
             let step_text = {
-                let current_lesson = imp.current_lesson.borrow();
-                current_lesson.as_ref().unwrap().steps[next_step]
-                    .text
-                    .clone()
+                let current_lesson_boxed = imp.current_lesson.borrow();
+                if let Some(boxed) = current_lesson_boxed.as_ref() {
+                    if let Ok(lesson) = boxed.try_borrow::<Lesson>() {
+                        lesson.steps[next_step].text.clone()
+                    } else {
+                        return;
+                    }
+                } else {
+                    return;
+                }
             };
 
             imp.target_text_view.set_text(&step_text);
