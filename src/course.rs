@@ -1,13 +1,14 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LessonStep {
     pub id: u32,
     pub text: String,
     pub target_keys: Vec<String>,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, glib::Boxed)]
+#[boxed_type(name = "Lesson")]
 pub struct Lesson {
     pub id: u32,
     pub title: String,
