@@ -63,6 +63,7 @@ mod imp {
             self.parent_constructed();
             self.setup_keyboard();
             self.setup_signals();
+            self.setup_settings_signals();
         }
     }
 
@@ -154,6 +155,16 @@ impl imp::LessonView {
             });
         }
     }
+
+    fn setup_settings_signals(&self) {
+        let obj = self.obj();
+        obj.connect_notify_local(Some("current-step-index"), |lesson_view, _| {
+            let settings = gio::Settings::new("org.gnome.mecalin");
+            settings
+                .set_uint("current-step", lesson_view.current_step_index() + 1)
+                .unwrap();
+        });
+    }
 }
 
 glib::wrapper! {
@@ -169,6 +180,10 @@ impl LessonView {
 
     pub fn set_lesson(&self, lesson: &Lesson) {
         self.set_current_lesson(Some(glib::BoxedAnyObject::new(lesson.clone())));
+
+        // Save current lesson to settings
+        let settings = gio::Settings::new("org.gnome.mecalin");
+        settings.set_uint("current-lesson", lesson.id).unwrap();
 
         let imp = self.imp();
         imp.lesson_description.set_text(&lesson.description);

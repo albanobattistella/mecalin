@@ -130,15 +130,20 @@ impl StudyRoom {
     pub fn show_lesson_view(&self) {
         let imp = self.imp();
         if let Some(course) = imp.course.borrow().as_ref() {
-            let current_lesson = if let Some(settings) = imp.settings.borrow().as_ref() {
-                settings.uint("current-lesson")
-            } else {
-                1 // Default to lesson 1 if no settings
-            };
+            let settings = gio::Settings::new("org.gnome.mecalin");
+            let current_lesson = settings.uint("current-lesson");
+            let current_step = settings.uint("current-step");
 
             if let Some(lesson) = course.get_lesson(current_lesson) {
                 imp.lesson_view_widget.set_course(course.clone());
                 imp.lesson_view_widget.set_lesson(lesson);
+
+                // Set the saved step index (convert from 1-based to 0-based)
+                if current_step > 0 {
+                    imp.lesson_view_widget
+                        .set_current_step_index(current_step - 1);
+                }
+
                 imp.main_stack.set_visible_child_name("lesson_view");
             }
         }
