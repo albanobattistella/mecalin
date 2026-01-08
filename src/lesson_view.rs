@@ -1,6 +1,7 @@
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use i18n_format::i18n_fmt;
+use std::cell::{Cell, RefCell};
 
 use crate::course::Lesson;
 use crate::keyboard_widget::KeyboardWidget;
@@ -24,10 +25,10 @@ mod imp {
         #[template_child]
         pub keyboard_container: TemplateChild<gtk::Box>,
 
-        pub keyboard_widget: std::cell::RefCell<Option<KeyboardWidget>>,
-        pub current_lesson: std::cell::RefCell<Option<Lesson>>,
-        pub current_step_index: std::cell::Cell<usize>,
-        pub course: std::cell::RefCell<Option<crate::course::Course>>,
+        pub keyboard_widget: RefCell<Option<KeyboardWidget>>,
+        pub current_lesson: RefCell<Option<Lesson>>,
+        pub current_step_index: Cell<usize>,
+        pub course: RefCell<Option<crate::course::Course>>,
     }
 
     #[glib::object_subclass]
@@ -52,6 +53,7 @@ mod imp {
             self.setup_signals();
         }
     }
+
     impl WidgetImpl for LessonView {}
     impl BoxImpl for LessonView {}
 }
@@ -60,7 +62,7 @@ impl imp::LessonView {
     fn setup_keyboard(&self) {
         let keyboard = KeyboardWidget::new();
         self.keyboard_container.append(keyboard.widget());
-        *self.keyboard_widget.borrow_mut() = Some(keyboard);
+        self.keyboard_widget.replace(Some(keyboard));
     }
 
     fn setup_signals(&self) {
