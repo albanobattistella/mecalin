@@ -9,16 +9,19 @@
         {
           "id": 1,
           "text": "asdf jkl;",
+          "description": "Type the home row keys in sequence",
           "target_keys": ["a", "s", "d", "f", "j", "k", "l"]
         },
         {
           "id": 2,
           "text": "aaa sss ddd fff jjj kkk lll",
+          "description": "Practice repeating each home row key",
           "target_keys": ["a", "s", "d", "f", "j", "k", "l"]
         },
         {
           "id": 3,
           "text": "ask dad fall jak",
+          "description": "Type simple words using home row keys",
           "target_keys": ["a", "s", "d", "f", "j", "k", "l"]
         }
       ]
@@ -32,11 +35,13 @@
         {
           "id": 1,
           "text": "qwer tyui op",
+          "description": "Type the top row keys in sequence",
           "target_keys": ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"]
         },
         {
           "id": 2,
           "text": "quit work type port",
+          "description": "Type words using top row keys",
           "target_keys": ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"]
         }
       ]
@@ -50,11 +55,13 @@
         {
           "id": 1,
           "text": "zxcv bnm",
+          "description": "Type the bottom row keys in sequence",
           "target_keys": ["z", "x", "c", "v", "b", "n", "m"]
         },
         {
           "id": 2,
           "text": "zoom box cave move",
+          "description": "Type words using bottom row keys",
           "target_keys": ["z", "x", "c", "v", "b", "n", "m"]
         }
       ]
