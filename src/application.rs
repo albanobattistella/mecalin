@@ -30,6 +30,7 @@ mod imp {
         fn activate(&self) {
             let app = self.obj();
             let window = MecalinWindow::new(app.upcast_ref());
+            window.load_window_state();
             window.present();
         }
     }

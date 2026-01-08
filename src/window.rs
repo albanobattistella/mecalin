@@ -72,9 +72,7 @@ glib::wrapper! {
 
 impl MecalinWindow {
     pub fn new(app: &adw::Application) -> Self {
-        let window: Self = glib::Object::builder().property("application", app).build();
-        window.load_window_state();
-        window
+        glib::Object::builder().property("application", app).build()
     }
 
     pub fn show_study_room(&self) {
@@ -177,7 +175,7 @@ impl MecalinWindow {
         }
     }
 
-    fn load_window_state(&self) {
+    pub fn load_window_state(&self) {
         let settings = gio::Settings::new("org.gnome.mecalin.state.window");
 
         let (width, height) = settings.get::<(i32, i32)>("size");
