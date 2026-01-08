@@ -138,11 +138,13 @@ impl StudyRoom {
                 imp.lesson_view_widget.set_course(course.clone());
                 imp.lesson_view_widget.set_lesson(lesson);
 
-                // Set the saved step index (convert from 1-based to 0-based)
-                if current_step > 0 {
-                    imp.lesson_view_widget
-                        .set_current_step_index(current_step - 1);
-                }
+                // Load the correct step after setting the lesson
+                let step_index = if current_step > 0 {
+                    current_step - 1
+                } else {
+                    0
+                };
+                imp.lesson_view_widget.load_step(step_index);
 
                 imp.main_stack.set_visible_child_name("lesson_view");
             }

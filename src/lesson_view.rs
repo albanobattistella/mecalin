@@ -212,6 +212,34 @@ impl LessonView {
         imp.text_view.set_text("");
     }
 
+    pub fn load_step(&self, step_index: u32) {
+        self.set_current_step_index(step_index);
+
+        let imp = self.imp();
+        let current_lesson_boxed = imp.current_lesson.borrow();
+        if let Some(boxed) = current_lesson_boxed.as_ref() {
+            if let Ok(lesson) = boxed.try_borrow::<Lesson>() {
+                if let Some(step) = lesson.steps.get(step_index as usize) {
+                    imp.target_text_view.set_text(&step.text);
+                    imp.text_view.set_text("");
+
+                    // Update keyboard for this step
+                    let mut target_keys = std::collections::HashSet::new();
+                    for ch in step.text.chars() {
+                        if ch.is_alphabetic() || ch == ' ' {
+                            target_keys.insert(ch.to_lowercase().next().unwrap_or(ch));
+                        }
+                    }
+
+                    let keyboard_widget = imp.keyboard_widget.borrow();
+                    if let Some(keyboard) = keyboard_widget.as_ref() {
+                        keyboard.set_visible_keys(Some(target_keys));
+                    }
+                }
+            }
+        }
+    }
+
     pub fn set_course(&self, course: crate::course::Course) {
         let imp = self.imp();
         *imp.course.borrow_mut() = Some(course);
