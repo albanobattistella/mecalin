@@ -72,7 +72,9 @@ glib::wrapper! {
 
 impl MecalinWindow {
     pub fn new(app: &adw::Application) -> Self {
-        glib::Object::builder().property("application", app).build()
+        let window: Self = glib::Object::builder().property("application", app).build();
+        window.load_window_state();
+        window
     }
 
     pub fn show_study_room(&self) {
@@ -173,6 +175,40 @@ impl MecalinWindow {
             self.set_title("Mecalin");
             self.set_subtitle("");
         }
+    }
+
+    fn load_window_state(&self) {
+        let settings = gio::Settings::new("org.gnome.mecalin.state.window");
+
+        let (width, height) = settings.get::<(i32, i32)>("size");
+        self.set_default_size(width, height);
+
+        if settings.boolean("maximized") {
+            self.maximize();
+        }
+
+        self.connect_notify_local(Some("maximized"), move |window, _| {
+            let settings = gio::Settings::new("org.gnome.mecalin.state.window");
+            settings
+                .set_boolean("maximized", window.is_maximized())
+                .unwrap();
+        });
+
+        self.connect_notify_local(Some("default-width"), move |window, _| {
+            let settings = gio::Settings::new("org.gnome.mecalin.state.window");
+            if !window.is_maximized() {
+                let size = (window.default_width(), window.default_height());
+                settings.set("size", &size).unwrap();
+            }
+        });
+
+        self.connect_notify_local(Some("default-height"), move |window, _| {
+            let settings = gio::Settings::new("org.gnome.mecalin.state.window");
+            if !window.is_maximized() {
+                let size = (window.default_width(), window.default_height());
+                settings.set("size", &size).unwrap();
+            }
+        });
     }
 }
 

@@ -11,5 +11,21 @@
       <summary>Current step</summary>
       <description>The current step within the lesson</description>
     </key>
+
+    <child name="state" schema="org.gnome.mecalin.state"/>
+  </schema>
+
+  <schema id="org.gnome.mecalin.state" path="/org/gnome/mecalin/state/">
+    <child name="window" schema="org.gnome.mecalin.state.window"/>
+  </schema>
+
+  <schema id="org.gnome.mecalin.state.window" path="/org/gnome/mecalin/state/window/">
+    <key name="maximized" type="b">
+      <default>false</default>
+    </key>
+
+    <key name="size" type="(ii)">
+      <default>(1024, 768)</default>
+    </key>
   </schema>
 </schemalist>
