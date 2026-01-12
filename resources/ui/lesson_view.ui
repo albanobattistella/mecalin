@@ -18,6 +18,14 @@
       </object>
     </child>
     <child>
+      <object class="GtkLabel" id="repetition_label">
+        <property name="halign">center</property>
+        <style>
+          <class name="caption"/>
+        </style>
+      </object>
+    </child>
+    <child>
       <object class="MecalinTargetTextView" id="target_text_view">
         <property name="halign">center</property>
         <property name="width-request">400</property>

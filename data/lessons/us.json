@@ -10,19 +10,22 @@
           "id": 1,
           "text": "asdf jkl;",
           "description": "Type the home row keys in sequence",
-          "target_keys": ["a", "s", "d", "f", "j", "k", "l"]
+          "target_keys": ["a", "s", "d", "f", "j", "k", "l"],
+          "repetitions": 3
         },
         {
           "id": 2,
           "text": "aaa sss ddd fff jjj kkk lll",
           "description": "Practice repeating each home row key",
-          "target_keys": ["a", "s", "d", "f", "j", "k", "l"]
+          "target_keys": ["a", "s", "d", "f", "j", "k", "l"],
+          "repetitions": 2
         },
         {
           "id": 3,
           "text": "ask dad fall jak",
           "description": "Type simple words using home row keys",
-          "target_keys": ["a", "s", "d", "f", "j", "k", "l"]
+          "target_keys": ["a", "s", "d", "f", "j", "k", "l"],
+          "repetitions": 1
         }
       ]
     },

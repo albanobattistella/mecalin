@@ -1,5 +1,6 @@
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
+use i18n_format::i18n_fmt;
 use std::cell::{Cell, RefCell};
 
 use crate::course::Lesson;
@@ -17,6 +18,8 @@ mod imp {
         #[template_child]
         pub lesson_description: TemplateChild<gtk::Label>,
         #[template_child]
+        pub repetition_label: TemplateChild<gtk::Label>,
+        #[template_child]
         pub target_text_view: TemplateChild<TargetTextView>,
         #[template_child]
         pub text_view: TemplateChild<TextView>,
@@ -28,6 +31,7 @@ mod imp {
         pub current_lesson: RefCell<Option<glib::BoxedAnyObject>>,
         #[property(get, set)]
         pub current_step_index: Cell<u32>,
+        pub current_repetition: Cell<u32>,
         pub course: RefCell<Option<crate::course::Course>>,
     }
 
@@ -85,6 +89,7 @@ impl imp::LessonView {
             let target_text_view = self.target_text_view.clone();
             let target_text_view_clone = self.target_text_view.clone();
             let lesson_view_clone = self.obj().downgrade();
+            let lesson_view_clone2 = self.obj().downgrade();
 
             let buffer = self.text_view.text_view().buffer();
             buffer.connect_insert_text(move |buffer, _iter, text| {
@@ -102,6 +107,11 @@ impl imp::LessonView {
 
                 // Check if the new text would match target text
                 if !target_str.starts_with(&new_text) {
+                    // Mistake made - reset repetition count
+                    if let Some(lesson_view) = lesson_view_clone.upgrade() {
+                        lesson_view.reset_repetition_count();
+                    }
+
                     // Find the last space position or go to beginning
                     let last_space_pos = current_str.rfind(' ').map(|pos| pos + 1).unwrap_or(0);
 
@@ -137,12 +147,12 @@ impl imp::LessonView {
 
                 // Check if step is completed
                 if typed_str == target_str && !target_str.is_empty() {
-                    // Step completed - advance to next step or lesson
+                    // Step completed - check if we need more repetitions
                     glib::idle_add_local_once({
-                        let lesson_view = lesson_view_clone.clone();
+                        let lesson_view = lesson_view_clone2.clone();
                         move || {
                             if let Some(lesson_view) = lesson_view.upgrade() {
-                                lesson_view.advance_to_next_step();
+                                lesson_view.handle_step_completion();
                             }
                         }
                     });
@@ -188,12 +198,14 @@ impl LessonView {
         let imp = self.imp();
         imp.lesson_description.set_text(&lesson.description);
 
-        // Reset step index
+        // Reset step index and repetition count
         self.set_current_step_index(0);
+        imp.current_repetition.set(0);
 
         // Set the first step's text as target text
         if let Some(first_step) = lesson.steps.first() {
             imp.target_text_view.set_text(&first_step.text);
+            self.update_repetition_label();
 
             // Extract unique characters from the lesson text for keyboard display
             let mut target_keys = std::collections::HashSet::new();
@@ -216,12 +228,16 @@ impl LessonView {
         self.set_current_step_index(step_index);
 
         let imp = self.imp();
+        // Reset repetition count for new step
+        imp.current_repetition.set(0);
+
         let current_lesson_boxed = imp.current_lesson.borrow();
         if let Some(boxed) = current_lesson_boxed.as_ref() {
             if let Ok(lesson) = boxed.try_borrow::<Lesson>() {
                 if let Some(step) = lesson.steps.get(step_index as usize) {
                     imp.target_text_view.set_text(&step.text);
                     imp.text_view.set_text("");
+                    self.update_repetition_label();
 
                     // Update keyboard for this step
                     let mut target_keys = std::collections::HashSet::new();
@@ -243,6 +259,53 @@ impl LessonView {
     pub fn set_course(&self, course: crate::course::Course) {
         let imp = self.imp();
         *imp.course.borrow_mut() = Some(course);
+    }
+
+    pub fn reset_repetition_count(&self) {
+        let imp = self.imp();
+        imp.current_repetition.set(0);
+        self.update_repetition_label();
+    }
+
+    pub fn update_repetition_label(&self) {
+        let imp = self.imp();
+        let current_repetition = imp.current_repetition.get();
+
+        let current_lesson_boxed = imp.current_lesson.borrow();
+        if let Some(boxed) = current_lesson_boxed.as_ref() {
+            if let Ok(lesson) = boxed.try_borrow::<Lesson>() {
+                let step_index = self.current_step_index() as usize;
+                if let Some(step) = lesson.steps.get(step_index) {
+                    let label_text =
+                        i18n_fmt! { i18n_fmt("{}/{} Good", current_repetition, step.repetitions) };
+                    imp.repetition_label.set_text(&label_text);
+                }
+            }
+        }
+    }
+
+    pub fn handle_step_completion(&self) {
+        let imp = self.imp();
+        let current_repetition = imp.current_repetition.get() + 1;
+        imp.current_repetition.set(current_repetition);
+
+        let current_lesson_boxed = imp.current_lesson.borrow();
+        if let Some(boxed) = current_lesson_boxed.as_ref() {
+            if let Ok(lesson) = boxed.try_borrow::<Lesson>() {
+                let step_index = self.current_step_index() as usize;
+                if let Some(step) = lesson.steps.get(step_index) {
+                    self.update_repetition_label();
+
+                    if current_repetition >= step.repetitions {
+                        // Required repetitions completed, advance to next step
+                        self.advance_to_next_step();
+                    } else {
+                        // Need more repetitions, clear text for next attempt
+                        imp.text_view.set_text("");
+                    }
+                }
+            }
+        }
     }
 
     pub fn advance_to_next_step(&self) {

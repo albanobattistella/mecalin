@@ -6,6 +6,12 @@ pub struct LessonStep {
     pub text: String,
     pub description: Option<String>,
     pub target_keys: Vec<String>,
+    #[serde(default = "default_repetitions")]
+    pub repetitions: u32,
+}
+
+fn default_repetitions() -> u32 {
+    1
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, glib::Boxed)]
