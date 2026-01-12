@@ -72,7 +72,8 @@
       <object class="GtkBox" id="keyboard_container">
         <property name="orientation">vertical</property>
         <property name="halign">center</property>
-        <property name="valign">center</property>
+        <property name="valign">end</property>
+        <property name="vexpand">true</property>
       </object>
     </child>
     <child>
