@@ -24,6 +24,8 @@ pub struct Lesson {
     pub description: String,
     pub target_keys: Vec<String>,
     pub steps: Vec<LessonStep>,
+    #[serde(default)]
+    pub introduction: bool,
 }
 
 #[derive(Serialize, Deserialize)]

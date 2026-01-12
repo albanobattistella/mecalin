@@ -1,6 +1,14 @@
 {
   "lessons": [
     {
+      "id": 0,
+      "title": "Welcome to Mecalin",
+      "description": "Welcome to Mecalin, your typing tutor! This course will teach you touch typing step by step. You'll start with the home row keys and gradually learn all the keys on the keyboard. Take your time, practice regularly, and you'll become a proficient typist in no time!",
+      "target_keys": [],
+      "steps": [],
+      "introduction": true
+    },
+    {
       "id": 1,
       "title": "Home Row Keys",
       "description": "Learn the basic home row keys: A, S, D, F, J, K, L",

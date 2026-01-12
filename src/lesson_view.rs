@@ -216,37 +216,45 @@ impl LessonView {
         self.set_current_step_index(0);
         imp.current_repetition.set(0);
 
-        // Set the first step's text as target text
-        if let Some(first_step) = lesson.steps.first() {
-            if first_step.introduction {
-                imp.step_description.set_visible(true);
-                imp.step_description.set_text(
-                    &first_step
-                        .description
-                        .as_deref()
-                        .unwrap_or(&first_step.text),
-                );
-                imp.continue_button.set_visible(true);
-                imp.text_container.set_visible(false);
-            } else {
-                imp.step_description.set_visible(false);
-                imp.continue_button.set_visible(false);
-                imp.text_container.set_visible(true);
-                imp.target_text_view.set_text(&first_step.text);
-                self.update_repetition_label();
-            }
-
-            // Extract unique characters from the lesson text for keyboard display
-            let mut target_keys = std::collections::HashSet::new();
-            for ch in first_step.text.chars() {
-                if ch.is_alphabetic() || ch == ' ' {
-                    target_keys.insert(ch.to_lowercase().next().unwrap_or(ch));
+        if lesson.introduction {
+            // Introduction lesson - show description and continue button, hide everything else
+            imp.step_description.set_visible(false);
+            imp.continue_button.set_visible(true);
+            imp.text_container.set_visible(false);
+        } else {
+            // Regular lesson - handle first step
+            // Set the first step's text as target text
+            if let Some(first_step) = lesson.steps.first() {
+                if first_step.introduction {
+                    imp.step_description.set_visible(true);
+                    imp.step_description.set_text(
+                        &first_step
+                            .description
+                            .as_deref()
+                            .unwrap_or(&first_step.text),
+                    );
+                    imp.continue_button.set_visible(true);
+                    imp.text_container.set_visible(false);
+                } else {
+                    imp.step_description.set_visible(false);
+                    imp.continue_button.set_visible(false);
+                    imp.text_container.set_visible(true);
+                    imp.target_text_view.set_text(&first_step.text);
+                    self.update_repetition_label();
                 }
-            }
 
-            let keyboard_widget = imp.keyboard_widget.borrow();
-            if let Some(keyboard) = keyboard_widget.as_ref() {
-                keyboard.set_visible_keys(Some(target_keys));
+                // Extract unique characters from the lesson text for keyboard display
+                let mut target_keys = std::collections::HashSet::new();
+                for ch in first_step.text.chars() {
+                    if ch.is_alphabetic() || ch == ' ' {
+                        target_keys.insert(ch.to_lowercase().next().unwrap_or(ch));
+                    }
+                }
+
+                let keyboard_widget = imp.keyboard_widget.borrow();
+                if let Some(keyboard) = keyboard_widget.as_ref() {
+                    keyboard.set_visible_keys(Some(target_keys));
+                }
             }
         }
 
@@ -352,6 +360,56 @@ impl LessonView {
 
     pub fn advance_to_next_step(&self) {
         let imp = self.imp();
+
+        // Check if this is an introduction lesson
+        let is_introduction_lesson = {
+            let current_lesson_boxed = imp.current_lesson.borrow();
+            if let Some(boxed) = current_lesson_boxed.as_ref() {
+                if let Ok(lesson) = boxed.try_borrow::<Lesson>() {
+                    lesson.introduction
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        };
+
+        if is_introduction_lesson {
+            // Introduction lesson completed - try to load next lesson
+            let current_lesson_id = {
+                let current_lesson_boxed = imp.current_lesson.borrow();
+                if let Some(boxed) = current_lesson_boxed.as_ref() {
+                    if let Ok(lesson) = boxed.try_borrow::<Lesson>() {
+                        lesson.id
+                    } else {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+            };
+
+            let next_lesson_option = {
+                let course = imp.course.borrow();
+                course
+                    .as_ref()
+                    .and_then(|c| c.get_lesson(current_lesson_id + 1).cloned())
+            };
+
+            if let Some(next_lesson) = next_lesson_option {
+                // Load next lesson
+                self.set_lesson(&next_lesson);
+            } else {
+                // All lessons completed
+                imp.lesson_description
+                    .set_text("Course completed! Congratulations!");
+                imp.step_description.set_visible(false);
+                imp.continue_button.set_visible(false);
+                imp.text_container.set_visible(false);
+            }
+            return;
+        }
 
         // Get the current lesson info without borrowing
         let (current_lesson_id, current_step, total_steps) = {
