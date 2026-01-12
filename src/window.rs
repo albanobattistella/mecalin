@@ -110,8 +110,8 @@ impl MecalinWindow {
             .application_icon(config::APPLICATION_ID)
             .developer_name("Ignacio Casal Quinteiro")
             .version(config::VERSION)
-            .website("https://github.com/mecalin/mecalin")
-            .issue_url("https://github.com/mecalin/mecalin/issues")
+            .website("https://github.com/nacho/mecalin")
+            .issue_url("https://github.com/nacho/mecalin/issues")
             .copyright("© 2026 Ignacio Casal Quinteiro")
             .license_type(gtk::License::Gpl20)
             .build();
