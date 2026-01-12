@@ -161,17 +161,22 @@ impl KeyboardWidget {
                 let y = start_y + row_idx as f64 * (key_height + row_spacing);
 
                 let is_current = current.is_some_and(|c| {
-                    let c_lower = c.to_lowercase().next().unwrap();
-                    let base_lower = key_char.to_lowercase().next().unwrap();
-                    c_lower == base_lower
-                        || key_info
-                            .shift
-                            .as_ref()
-                            .is_some_and(|s| s.chars().next().unwrap_or(' ') == c)
-                        || key_info
-                            .altgr
-                            .as_ref()
-                            .is_some_and(|a| a.chars().next().unwrap_or(' ') == c)
+                    if c == ' ' {
+                        // Space character should only match space, not other keys
+                        false
+                    } else {
+                        let c_lower = c.to_lowercase().next().unwrap();
+                        let base_lower = key_char.to_lowercase().next().unwrap();
+                        c_lower == base_lower
+                            || key_info
+                                .shift
+                                .as_ref()
+                                .is_some_and(|s| s.chars().next().unwrap_or(' ') == c)
+                            || key_info
+                                .altgr
+                                .as_ref()
+                                .is_some_and(|a| a.chars().next().unwrap_or(' ') == c)
+                    }
                 });
 
                 if is_current {
