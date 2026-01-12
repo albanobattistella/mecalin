@@ -242,6 +242,9 @@ impl LessonView {
                     imp.text_container.set_visible(true);
                     imp.target_text_view.set_text(&first_step.text);
                     self.update_repetition_label();
+
+                    // Focus the text view for immediate typing
+                    imp.text_view.text_view().grab_focus();
                 }
 
                 // Extract unique characters from the lesson text for keyboard display
@@ -288,6 +291,9 @@ impl LessonView {
                         imp.target_text_view.set_text(&step.text);
                         imp.text_view.set_text("");
                         self.update_repetition_label();
+
+                        // Focus the text view for immediate typing
+                        imp.text_view.text_view().grab_focus();
                     }
 
                     // Update keyboard for this step
@@ -353,6 +359,9 @@ impl LessonView {
                     } else {
                         // Need more repetitions, clear text for next attempt
                         imp.text_view.set_text("");
+
+                        // Focus the text view for next repetition
+                        imp.text_view.text_view().grab_focus();
                     }
                 }
             }
