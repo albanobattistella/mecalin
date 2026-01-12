@@ -91,7 +91,7 @@ impl imp::MainActionList {
             if let Some(obj) = obj.upgrade() {
                 match row.index() {
                     0 => obj.emit_by_name::<()>("study-room-selected", &[]),
-                    4 => obj.emit_by_name::<()>("about-selected", &[]),
+                    1 => obj.emit_by_name::<()>("about-selected", &[]),
                     _ => {}
                 }
             }
