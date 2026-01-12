@@ -56,7 +56,6 @@ impl imp::MainActionList {
         let actions = [
             ("Study room", "Learn typing fundamentals"),
             ("Skill game", "Practice with games"),
-            ("Videos", "Watch typing tutorials"),
             ("About", "Application information"),
         ];
 
