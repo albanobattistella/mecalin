@@ -18,7 +18,28 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox">
+      <object class="GtkLabel" id="step_description">
+        <property name="halign">center</property>
+        <property name="wrap">true</property>
+        <property name="justify">center</property>
+        <property name="visible">false</property>
+        <style>
+          <class name="title-3"/>
+        </style>
+      </object>
+    </child>
+    <child>
+      <object class="GtkButton" id="continue_button">
+        <property name="label" translatable="yes">Continue</property>
+        <property name="halign">center</property>
+        <property name="visible">false</property>
+        <style>
+          <class name="suggested-action"/>
+        </style>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox" id="text_container">
         <property name="orientation">horizontal</property>
         <property name="halign">fill</property>
         <property name="hexpand">true</property>

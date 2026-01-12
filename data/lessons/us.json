@@ -7,6 +7,13 @@
       "target_keys": ["a", "s", "d", "f", "j", "k", "l"],
       "steps": [
         {
+          "id": 0,
+          "text": "",
+          "description": "Welcome to the Home Row Keys lesson! In this lesson, you'll learn the foundation of touch typing by mastering the home row keys: A, S, D, F, J, K, L, and semicolon. Place your fingers on these keys and get ready to start your typing journey.",
+          "target_keys": ["a", "s", "d", "f", "j", "k", "l"],
+          "introduction": true
+        },
+        {
           "id": 1,
           "text": "asdf jkl;",
           "description": "Type the home row keys in sequence",

@@ -8,6 +8,8 @@ pub struct LessonStep {
     pub target_keys: Vec<String>,
     #[serde(default = "default_repetitions")]
     pub repetitions: u32,
+    #[serde(default)]
+    pub introduction: bool,
 }
 
 fn default_repetitions() -> u32 {

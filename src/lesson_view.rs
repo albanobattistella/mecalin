@@ -18,6 +18,12 @@ mod imp {
         #[template_child]
         pub lesson_description: TemplateChild<gtk::Label>,
         #[template_child]
+        pub step_description: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub continue_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub text_container: TemplateChild<gtk::Box>,
+        #[template_child]
         pub repetition_label: TemplateChild<gtk::Label>,
         #[template_child]
         pub target_text_view: TemplateChild<TargetTextView>,
@@ -83,6 +89,14 @@ impl imp::LessonView {
     }
 
     fn setup_signals(&self) {
+        // Setup continue button for introduction steps
+        let lesson_view_weak = self.obj().downgrade();
+        self.continue_button.connect_clicked(move |_| {
+            if let Some(lesson_view) = lesson_view_weak.upgrade() {
+                lesson_view.advance_to_next_step();
+            }
+        });
+
         let keyboard_widget = self.keyboard_widget.borrow();
         if let Some(keyboard) = keyboard_widget.as_ref() {
             let keyboard_clone = keyboard.clone();
@@ -204,8 +218,23 @@ impl LessonView {
 
         // Set the first step's text as target text
         if let Some(first_step) = lesson.steps.first() {
-            imp.target_text_view.set_text(&first_step.text);
-            self.update_repetition_label();
+            if first_step.introduction {
+                imp.step_description.set_visible(true);
+                imp.step_description.set_text(
+                    &first_step
+                        .description
+                        .as_deref()
+                        .unwrap_or(&first_step.text),
+                );
+                imp.continue_button.set_visible(true);
+                imp.text_container.set_visible(false);
+            } else {
+                imp.step_description.set_visible(false);
+                imp.continue_button.set_visible(false);
+                imp.text_container.set_visible(true);
+                imp.target_text_view.set_text(&first_step.text);
+                self.update_repetition_label();
+            }
 
             // Extract unique characters from the lesson text for keyboard display
             let mut target_keys = std::collections::HashSet::new();
@@ -235,9 +264,22 @@ impl LessonView {
         if let Some(boxed) = current_lesson_boxed.as_ref() {
             if let Ok(lesson) = boxed.try_borrow::<Lesson>() {
                 if let Some(step) = lesson.steps.get(step_index as usize) {
-                    imp.target_text_view.set_text(&step.text);
-                    imp.text_view.set_text("");
-                    self.update_repetition_label();
+                    if step.introduction {
+                        // Introduction step - show description and continue button, hide text views
+                        imp.step_description.set_visible(true);
+                        imp.step_description
+                            .set_text(&step.description.as_deref().unwrap_or(&step.text));
+                        imp.continue_button.set_visible(true);
+                        imp.text_container.set_visible(false);
+                    } else {
+                        // Regular step - hide description and button, show text views
+                        imp.step_description.set_visible(false);
+                        imp.continue_button.set_visible(false);
+                        imp.text_container.set_visible(true);
+                        imp.target_text_view.set_text(&step.text);
+                        imp.text_view.set_text("");
+                        self.update_repetition_label();
+                    }
 
                     // Update keyboard for this step
                     let mut target_keys = std::collections::HashSet::new();
