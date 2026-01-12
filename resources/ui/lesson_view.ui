@@ -23,8 +23,10 @@
         <property name="wrap">true</property>
         <property name="justify">center</property>
         <property name="visible">false</property>
+        <property name="margin-start">48</property>
+        <property name="margin-end">48</property>
         <style>
-          <class name="title-3"/>
+          <class name="body"/>
         </style>
       </object>
     </child>
