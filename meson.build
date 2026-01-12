@@ -17,10 +17,10 @@ localedir = get_option('prefix') / get_option('localedir')
 application_id = 'org.gnome.mecalin'
 
 conf = configuration_data()
-conf.set_quoted('LOCALEDIR', localedir)
-conf.set_quoted('GETTEXT_PACKAGE', gettext_package)
-conf.set_quoted('VERSION', meson.project_version())
-conf.set_quoted('APPLICATION_ID', application_id)
+conf.set('LOCALEDIR', localedir)
+conf.set('GETTEXT_PACKAGE', gettext_package)
+conf.set('VERSION', meson.project_version())
+conf.set('APPLICATION_ID', application_id)
 
 configure_file(
   input: 'src/config.rs.in',
@@ -61,6 +61,7 @@ cargo_build = custom_target('cargo-build',
 )
 
 subdir('po')
+subdir('data/icons')
 
 # Desktop file
 desktop_file = i18n.merge_file(
