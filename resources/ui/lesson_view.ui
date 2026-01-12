@@ -26,6 +26,7 @@
           <object class="GtkBox">
             <property name="orientation">vertical</property>
             <property name="spacing">12</property>
+            <property name="hexpand">true</property>
             <child>
               <object class="MecalinTargetTextView" id="target_text_view">
                 <property name="halign">center</property>
