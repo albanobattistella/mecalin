@@ -63,16 +63,16 @@ impl imp::StudyRoom {
                 gettext("Start Course"),
                 gettext("Begin or continue typing lessons"),
             ),
-            (gettext("Lesson Review"), gettext("Review previous lessons")),
-            (
-                gettext("Speed Test"),
-                gettext("Test typing speed and accuracy"),
-            ),
-            (
-                gettext("Practice Exercises"),
-                gettext("Specific typing practice"),
-            ),
-            (gettext("Student Report"), gettext("View progress report")),
+            // TODO: (gettext("Lesson Review"), gettext("Review previous lessons")),
+            // TODO: (
+            //     gettext("Speed Test"),
+            //     gettext("Test typing speed and accuracy"),
+            // ),
+            // TODO: (
+            //     gettext("Practice Exercises"),
+            //     gettext("Specific typing practice"),
+            // ),
+            // TODO: (gettext("Student Report"), gettext("View progress report")),
         ];
 
         for (title, subtitle) in menu_items {
