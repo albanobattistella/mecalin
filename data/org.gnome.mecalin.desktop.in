@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Mecalin
-Comment=Learn how to type
+_Name=Mecalin
+_Comment=Learn how to type
 Exec=mecalin
 Icon=org.gnome.mecalin
 Terminal=false
