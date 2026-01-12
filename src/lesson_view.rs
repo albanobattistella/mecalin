@@ -250,7 +250,7 @@ impl LessonView {
                 // Extract unique characters from the lesson text for keyboard display
                 let mut target_keys = std::collections::HashSet::new();
                 for ch in first_step.text.chars() {
-                    if ch.is_alphabetic() || ch == ' ' {
+                    if !ch.is_control() {
                         target_keys.insert(ch.to_lowercase().next().unwrap_or(ch));
                     }
                 }
@@ -299,7 +299,7 @@ impl LessonView {
                     // Update keyboard for this step
                     let mut target_keys = std::collections::HashSet::new();
                     for ch in step.text.chars() {
-                        if ch.is_alphabetic() || ch == ' ' {
+                        if !ch.is_control() {
                             target_keys.insert(ch.to_lowercase().next().unwrap_or(ch));
                         }
                     }
