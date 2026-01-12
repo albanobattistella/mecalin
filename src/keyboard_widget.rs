@@ -6,10 +6,18 @@ use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct KeyInfo {
+    pub base: String,
+    pub shift: Option<String>,
+    pub altgr: Option<String>,
+    pub finger: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KeyboardLayout {
     pub name: String,
-    pub rows: Vec<Vec<String>>,
-    pub finger_map: HashMap<String, String>,
+    pub keys: Vec<Vec<KeyInfo>>,
+    pub space: KeyInfo,
 }
 
 impl KeyboardLayout {
@@ -27,41 +35,32 @@ impl Default for KeyboardLayout {
     fn default() -> Self {
         Self::load_from_json("us").unwrap_or_else(|_| Self {
             name: "US".to_string(),
-            rows: vec![
-                vec![
-                    "q".to_string(),
-                    "w".to_string(),
-                    "e".to_string(),
-                    "r".to_string(),
-                    "t".to_string(),
-                    "y".to_string(),
-                    "u".to_string(),
-                    "i".to_string(),
-                    "o".to_string(),
-                    "p".to_string(),
-                ],
-                vec![
-                    "a".to_string(),
-                    "s".to_string(),
-                    "d".to_string(),
-                    "f".to_string(),
-                    "g".to_string(),
-                    "h".to_string(),
-                    "j".to_string(),
-                    "k".to_string(),
-                    "l".to_string(),
-                ],
-                vec![
-                    "z".to_string(),
-                    "x".to_string(),
-                    "c".to_string(),
-                    "v".to_string(),
-                    "b".to_string(),
-                    "n".to_string(),
-                    "m".to_string(),
-                ],
-            ],
-            finger_map: HashMap::new(),
+            keys: vec![vec![
+                KeyInfo {
+                    base: "q".to_string(),
+                    shift: Some("Q".to_string()),
+                    altgr: None,
+                    finger: "left_pinky".to_string(),
+                },
+                KeyInfo {
+                    base: "w".to_string(),
+                    shift: Some("W".to_string()),
+                    altgr: None,
+                    finger: "left_ring".to_string(),
+                },
+                KeyInfo {
+                    base: "e".to_string(),
+                    shift: Some("E".to_string()),
+                    altgr: None,
+                    finger: "left_middle".to_string(),
+                },
+            ]],
+            space: KeyInfo {
+                base: " ".to_string(),
+                shift: None,
+                altgr: None,
+                finger: "both_thumbs".to_string(),
+            },
         })
     }
 }
@@ -131,8 +130,8 @@ impl KeyboardWidget {
         let layout_borrowed = layout.borrow();
         let visible_keys_borrowed = visible_keys.borrow();
 
-        let key_width = 40.0;
-        let key_height = 40.0;
+        let key_width = 50.0;
+        let key_height = 50.0;
         let key_spacing = 5.0;
         let row_spacing = 5.0;
 
@@ -141,7 +140,7 @@ impl KeyboardWidget {
 
         let current = current_key.borrow();
 
-        for (row_idx, row) in layout_borrowed.rows.iter().enumerate() {
+        for (row_idx, row) in layout_borrowed.keys.iter().enumerate() {
             let row_offset = match row_idx {
                 1 => key_width * 0.5,
                 2 => key_width * 0.75,
@@ -149,13 +148,23 @@ impl KeyboardWidget {
                 _ => 0.0,
             };
 
-            for (key_idx, key_str) in row.iter().enumerate() {
-                let key_char = key_str.chars().next().unwrap_or(' ');
+            for (key_idx, key_info) in row.iter().enumerate() {
+                let key_char = key_info.base.chars().next().unwrap_or(' ');
                 let x = start_x + row_offset + key_idx as f64 * (key_width + key_spacing);
                 let y = start_y + row_idx as f64 * (key_height + row_spacing);
 
                 let is_current = current.is_some_and(|c| {
-                    c.to_lowercase().next() == Some(key_char.to_lowercase().next().unwrap())
+                    let c_lower = c.to_lowercase().next().unwrap();
+                    let base_lower = key_char.to_lowercase().next().unwrap();
+                    c_lower == base_lower
+                        || key_info
+                            .shift
+                            .as_ref()
+                            .is_some_and(|s| s.chars().next().unwrap_or(' ') == c)
+                        || key_info
+                            .altgr
+                            .as_ref()
+                            .is_some_and(|a| a.chars().next().unwrap_or(' ') == c)
                 });
 
                 if is_current {
@@ -172,7 +181,6 @@ impl KeyboardWidget {
                 cr.rectangle(x, y, key_width, key_height);
                 cr.stroke().unwrap();
 
-                // Only show text if visible_keys is None or contains this key
                 let should_show_text = visible_keys_borrowed.as_ref().is_none_or(|visible| {
                     visible.contains(&key_char.to_lowercase().next().unwrap())
                 });
@@ -184,15 +192,32 @@ impl KeyboardWidget {
                         gtk::cairo::FontSlant::Normal,
                         gtk::cairo::FontWeight::Normal,
                     );
-                    cr.set_font_size(14.0);
+                    cr.set_font_size(10.0);
 
-                    let text = key_str.to_uppercase();
-                    let text_extents = cr.text_extents(&text).unwrap();
-                    let text_x = x + (key_width - text_extents.width()) / 2.0;
-                    let text_y = y + (key_height + text_extents.height()) / 2.0;
+                    // Draw base character (bottom left)
+                    let base_text = &key_info.base;
+                    cr.move_to(x + 5.0, y + key_height - 5.0);
+                    cr.show_text(base_text).unwrap();
 
-                    cr.move_to(text_x, text_y);
-                    cr.show_text(&text).unwrap();
+                    // Draw shift character (top left) - skip for alphabetic keys
+                    if let Some(shift_text) = &key_info.shift {
+                        if !key_info.base.chars().next().unwrap().is_alphabetic() {
+                            cr.move_to(x + 5.0, y + 15.0);
+                            cr.show_text(shift_text).unwrap();
+                        }
+                    }
+
+                    // Draw altgr character (bottom right)
+                    if let Some(altgr_text) = &key_info.altgr {
+                        if !altgr_text.is_empty() {
+                            let text_extents = cr.text_extents(altgr_text).unwrap();
+                            cr.move_to(
+                                x + key_width - text_extents.width() - 5.0,
+                                y + key_height - 5.0,
+                            );
+                            cr.show_text(altgr_text).unwrap();
+                        }
+                    }
                 }
             }
         }
@@ -218,7 +243,6 @@ impl KeyboardWidget {
         cr.rectangle(space_x, space_y, space_width, key_height);
         cr.stroke().unwrap();
 
-        // Only show SPACE text if visible_keys is None or contains space
         let should_show_space_text = visible_keys_borrowed
             .as_ref()
             .is_none_or(|visible| visible.contains(&' '));
