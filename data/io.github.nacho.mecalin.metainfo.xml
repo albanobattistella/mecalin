@@ -30,6 +30,18 @@
   
   <content_rating type="oars-1.1" />
   
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/nacho/mecalin/main/data/screenshots/1-main-menu.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/nacho/mecalin/main/data/screenshots/2-course-menu.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/nacho/mecalin/main/data/screenshots/3-lesson-view.png</image>
+    </screenshot>
+  </screenshots>
+  
   <releases>
     <release version="0.1.4" date="2026-01-13" />
   </releases>
