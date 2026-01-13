@@ -2,6 +2,5 @@
 .flatpak-builder/
 build-dir/
 builddir/
-Cargo.lock
 .builddir/
 build/
