@@ -1,5 +1,5 @@
 project('mecalin', 'rust',
-  version: '0.1.3',
+  version: '0.1.4',
   meson_version: '>= 0.59.0',
 )
 
