@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.nacho.mecalin</id>
+  
+  <name>Mecalin</name>
+  <summary>A typing tutor application to learn and improve touch typing skills</summary>
+  
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  
+  <description>
+    <p>
+      Mecalin is a modern typing tutor application that helps you learn and improve your touch typing skills.
+      It provides a clean and intuitive interface for practicing typing.
+    </p>
+    <p>
+      Features include structured lessons, keyboard layout visualization, and progress tracking to help you
+      become a more efficient typist.
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">io.github.nacho.mecalin.desktop</launchable>
+  
+  <categories>
+    <category>Education</category>
+    <category>Office</category>
+  </categories>
+  
+  <content_rating type="oars-1.1" />
+  
+  <releases>
+    <release version="0.1.4" date="2026-01-13" />
+  </releases>
+</component>
