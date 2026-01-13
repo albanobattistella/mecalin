@@ -24,6 +24,7 @@
   <launchable type="desktop-id">io.github.nacho.mecalin.desktop</launchable>
   
   <url type="homepage">https://github.com/nacho/mecalin</url>
+  <url type="vcs-browser">https://github.com/nacho/mecalin</url>
   
   <categories>
     <category>Education</category>
@@ -34,12 +35,15 @@
   
   <screenshots>
     <screenshot type="default">
+      <caption>Main menu with study room option</caption>
       <image>https://raw.githubusercontent.com/nacho/mecalin/main/data/screenshots/1-main-menu.png</image>
     </screenshot>
     <screenshot>
+      <caption>Course selection menu</caption>
       <image>https://raw.githubusercontent.com/nacho/mecalin/main/data/screenshots/2-course-menu.png</image>
     </screenshot>
     <screenshot>
+      <caption>Typing lesson with keyboard layout</caption>
       <image>https://raw.githubusercontent.com/nacho/mecalin/main/data/screenshots/3-lesson-view.png</image>
     </screenshot>
   </screenshots>
