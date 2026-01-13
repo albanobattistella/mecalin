@@ -1,7 +1,7 @@
 # Desktop file
 desktop_file = i18n.merge_file(
-  input: 'org.gnome.mecalin.desktop.in',
-  output: 'org.gnome.mecalin.desktop',
+  input: 'io.github.nacho.mecalin.desktop.in',
+  output: 'io.github.nacho.mecalin.desktop',
   type: 'desktop',
   po_dir: '../po',
   install: true,

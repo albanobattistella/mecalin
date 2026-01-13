@@ -2,7 +2,7 @@
 _Name=Mecalin
 _Comment=Learn how to type
 Exec=mecalin
-Icon=org.gnome.mecalin
+Icon=io.github.nacho.mecalin
 Terminal=false
 Type=Application
 Categories=Education;

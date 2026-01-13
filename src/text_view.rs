@@ -5,7 +5,7 @@ mod imp {
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate)]
-    #[template(resource = "/org/gnome/mecalin/ui/text_view.ui")]
+    #[template(resource = "/io/github/nacho/mecalin/ui/text_view.ui")]
     pub struct TextView {
         #[template_child]
         pub text_view: TemplateChild<gtk::TextView>,

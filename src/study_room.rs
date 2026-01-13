@@ -9,7 +9,7 @@ mod imp {
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate)]
-    #[template(resource = "/org/gnome/mecalin/ui/study_room.ui")]
+    #[template(resource = "/io/github/nacho/mecalin/ui/study_room.ui")]
     pub struct StudyRoom {
         #[template_child]
         pub lesson_list: TemplateChild<gtk::ListBox>,
@@ -55,7 +55,7 @@ impl imp::StudyRoom {
         let course = Course::new_with_language(language).unwrap_or_default();
         self.course.replace(Some(course));
 
-        let settings = gio::Settings::new("org.gnome.mecalin");
+        let settings = gio::Settings::new("io.github.nacho.mecalin");
         self.settings.replace(Some(settings));
 
         let menu_items = [
@@ -141,7 +141,7 @@ impl StudyRoom {
     pub fn show_lesson_view(&self) {
         let imp = self.imp();
         if let Some(course) = imp.course.borrow().as_ref() {
-            let settings = gio::Settings::new("org.gnome.mecalin");
+            let settings = gio::Settings::new("io.github.nacho.mecalin");
             let current_lesson = settings.uint("current-lesson");
             let current_step = settings.uint("current-step");
 

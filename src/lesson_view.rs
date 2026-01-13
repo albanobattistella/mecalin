@@ -13,7 +13,7 @@ mod imp {
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate, glib::Properties)]
-    #[template(resource = "/org/gnome/mecalin/ui/lesson_view.ui")]
+    #[template(resource = "/io/github/nacho/mecalin/ui/lesson_view.ui")]
     #[properties(wrapper_type = super::LessonView)]
     pub struct LessonView {
         #[template_child]
@@ -184,7 +184,7 @@ impl imp::LessonView {
     fn setup_settings_signals(&self) {
         let obj = self.obj();
         obj.connect_notify_local(Some("current-step-index"), |lesson_view, _| {
-            let settings = gio::Settings::new("org.gnome.mecalin");
+            let settings = gio::Settings::new("io.github.nacho.mecalin");
             settings
                 .set_uint("current-step", lesson_view.current_step_index() + 1)
                 .unwrap();
@@ -207,7 +207,7 @@ impl LessonView {
         self.set_current_lesson(Some(glib::BoxedAnyObject::new(lesson.clone())));
 
         // Save current lesson to settings
-        let settings = gio::Settings::new("org.gnome.mecalin");
+        let settings = gio::Settings::new("io.github.nacho.mecalin");
         settings.set_uint("current-lesson", lesson.id).unwrap();
 
         let imp = self.imp();

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Typewriter body -->
+  <rect x="16" y="48" width="96" height="64" rx="8" fill="#2d3748" stroke="#4a5568" stroke-width="2"/>
+  
+  <!-- Paper -->
+  <rect x="24" y="16" width="80" height="40" rx="2" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+  
+  <!-- Paper roller -->
+  <rect x="20" y="44" width="88" height="8" rx="4" fill="#718096"/>
+  
+  <!-- Keyboard keys -->
+  <g fill="#e2e8f0" stroke="#cbd5e0" stroke-width="1">
+    <!-- Top row -->
+    <rect x="24" y="60" width="8" height="8" rx="1"/>
+    <rect x="36" y="60" width="8" height="8" rx="1"/>
+    <rect x="48" y="60" width="8" height="8" rx="1"/>
+    <rect x="60" y="60" width="8" height="8" rx="1"/>
+    <rect x="72" y="60" width="8" height="8" rx="1"/>
+    <rect x="84" y="60" width="8" height="8" rx="1"/>
+    <rect x="96" y="60" width="8" height="8" rx="1"/>
+    
+    <!-- Middle row -->
+    <rect x="28" y="72" width="8" height="8" rx="1"/>
+    <rect x="40" y="72" width="8" height="8" rx="1"/>
+    <rect x="52" y="72" width="8" height="8" rx="1"/>
+    <rect x="64" y="72" width="8" height="8" rx="1"/>
+    <rect x="76" y="72" width="8" height="8" rx="1"/>
+    <rect x="88" y="72" width="8" height="8" rx="1"/>
+    <rect x="100" y="72" width="8" height="8" rx="1"/>
+    
+    <!-- Bottom row -->
+    <rect x="32" y="84" width="8" height="8" rx="1"/>
+    <rect x="44" y="84" width="8" height="8" rx="1"/>
+    <rect x="56" y="84" width="8" height="8" rx="1"/>
+    <rect x="68" y="84" width="8" height="8" rx="1"/>
+    <rect x="80" y="84" width="8" height="8" rx="1"/>
+    <rect x="92" y="84" width="8" height="8" rx="1"/>
+    
+    <!-- Space bar -->
+    <rect x="40" y="96" width="48" height="8" rx="1"/>
+  </g>
+  
+  <!-- Type bars -->
+  <g stroke="#4a5568" stroke-width="1" fill="none">
+    <line x1="64" y1="32" x2="60" y2="44"/>
+    <line x1="68" y1="32" x2="64" y2="44"/>
+    <line x1="72" y1="32" x2="68" y2="44"/>
+  </g>
+  
+  <!-- Text on paper -->
+  <text x="32" y="28" font-family="monospace" font-size="8" fill="#2d3748">mecalin</text>
+  <text x="32" y="38" font-family="monospace" font-size="6" fill="#718096">typing tutor</text>
+</svg>

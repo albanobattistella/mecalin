@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="org.gnome.mecalin" path="/org/gnome/mecalin/">
+  <schema id="io.github.nacho.mecalin" path="/io/github/nacho/mecalin/">
     <key name="current-lesson" type="u">
       <default>1</default>
       <summary>Current lesson</summary>
@@ -12,14 +12,14 @@
       <description>The current step within the lesson</description>
     </key>
 
-    <child name="state" schema="org.gnome.mecalin.state"/>
+    <child name="state" schema="io.github.nacho.mecalin.state"/>
   </schema>
 
-  <schema id="org.gnome.mecalin.state" path="/org/gnome/mecalin/state/">
-    <child name="window" schema="org.gnome.mecalin.state.window"/>
+  <schema id="io.github.nacho.mecalin.state" path="/io/github/nacho/mecalin/state/">
+    <child name="window" schema="io.github.nacho.mecalin.state.window"/>
   </schema>
 
-  <schema id="org.gnome.mecalin.state.window" path="/org/gnome/mecalin/state/window/">
+  <schema id="io.github.nacho.mecalin.state.window" path="/io/github/nacho/mecalin/state/window/">
     <key name="maximized" type="b">
       <default>false</default>
     </key>

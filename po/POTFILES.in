@@ -1,4 +1,4 @@
-data/org.gnome.mecalin.desktop.in
+data/io.github.nacho.mecalin.desktop.in
 resources/ui/lesson_view.ui
 resources/ui/study_room.ui
 resources/ui/window.ui

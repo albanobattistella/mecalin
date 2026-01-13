@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/org/gnome/mecalin">
+  <gresource prefix="/io/github/nacho/mecalin">
     <file preprocess="xml-stripblanks">ui/window.ui</file>
     <file preprocess="xml-stripblanks">ui/main_action_list.ui</file>
     <file preprocess="xml-stripblanks">ui/study_room.ui</file>
     <file preprocess="xml-stripblanks">ui/lesson_view.ui</file>
     <file preprocess="xml-stripblanks">ui/target_text_view.ui</file>
     <file preprocess="xml-stripblanks">ui/text_view.ui</file>
-    <file>icons/org.gnome.mecalin.svg</file>
+    <file>icons/io.github.nacho.mecalin.svg</file>
   </gresource>
 </gresources>

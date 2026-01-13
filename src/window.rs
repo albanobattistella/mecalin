@@ -17,7 +17,7 @@ mod imp {
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate)]
-    #[template(resource = "/org/gnome/mecalin/ui/window.ui")]
+    #[template(resource = "/io/github/nacho/mecalin/ui/window.ui")]
     pub struct MecalinWindow {
         #[template_child]
         pub header_bar: TemplateChild<adw::HeaderBar>,
@@ -178,7 +178,7 @@ impl MecalinWindow {
     }
 
     pub fn load_window_state(&self) {
-        let settings = gio::Settings::new("org.gnome.mecalin.state.window");
+        let settings = gio::Settings::new("io.github.nacho.mecalin.state.window");
 
         let (width, height) = settings.get::<(i32, i32)>("size");
         self.set_default_size(width, height);
@@ -188,14 +188,14 @@ impl MecalinWindow {
         }
 
         self.connect_notify_local(Some("maximized"), move |window, _| {
-            let settings = gio::Settings::new("org.gnome.mecalin.state.window");
+            let settings = gio::Settings::new("io.github.nacho.mecalin.state.window");
             settings
                 .set_boolean("maximized", window.is_maximized())
                 .unwrap();
         });
 
         self.connect_notify_local(Some("default-width"), move |window, _| {
-            let settings = gio::Settings::new("org.gnome.mecalin.state.window");
+            let settings = gio::Settings::new("io.github.nacho.mecalin.state.window");
             if !window.is_maximized() {
                 let size = (window.default_width(), window.default_height());
                 settings.set("size", size).unwrap();
@@ -203,7 +203,7 @@ impl MecalinWindow {
         });
 
         self.connect_notify_local(Some("default-height"), move |window, _| {
-            let settings = gio::Settings::new("org.gnome.mecalin.state.window");
+            let settings = gio::Settings::new("io.github.nacho.mecalin.state.window");
             if !window.is_maximized() {
                 let size = (window.default_width(), window.default_height());
                 settings.set("size", size).unwrap();

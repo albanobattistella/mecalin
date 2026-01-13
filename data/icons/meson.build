@@ -3,11 +3,11 @@ symbolicdir = icondir / 'symbolic' / 'apps'
 scalabledir = icondir / 'scalable' / 'apps'
 
 install_data(
-  'org.gnome.mecalin.svg',
+  'io.github.nacho.mecalin.svg',
   install_dir: scalabledir,
 )
 
 install_data(
-  'org.gnome.mecalin-symbolic.svg',
+  'io.github.nacho.mecalin-symbolic.svg',
   install_dir: symbolicdir,
 )

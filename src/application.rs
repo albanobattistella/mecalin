@@ -24,7 +24,7 @@ mod imp {
         fn startup(&self) {
             self.parent_startup();
             let app = self.obj();
-            app.set_resource_base_path(Some("/org/gnome/mecalin"));
+            app.set_resource_base_path(Some("/io/github/nacho/mecalin"));
         }
 
         fn activate(&self) {
@@ -47,7 +47,7 @@ glib::wrapper! {
 impl MecalinApplication {
     pub fn new() -> Self {
         glib::Object::builder()
-            .property("application-id", "org.gnome.mecalin")
+            .property("application-id", "io.github.nacho.mecalin")
             .build()
     }
 }

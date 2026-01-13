@@ -6,7 +6,7 @@ mod imp {
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate)]
-    #[template(resource = "/org/gnome/mecalin/ui/main_action_list.ui")]
+    #[template(resource = "/io/github/nacho/mecalin/ui/main_action_list.ui")]
     pub struct MainActionList {
         #[template_child]
         pub action_list: TemplateChild<gtk::ListBox>,
