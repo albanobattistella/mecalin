@@ -2,12 +2,12 @@
 <schemalist>
   <schema id="io.github.nacho.mecalin" path="/io/github/nacho/mecalin/">
     <key name="current-lesson" type="u">
-      <default>1</default>
+      <default>0</default>
       <summary>Current lesson</summary>
       <description>The current lesson number the user is on</description>
     </key>
     <key name="current-step" type="u">
-      <default>1</default>
+      <default>0</default>
       <summary>Current step</summary>
       <description>The current step within the lesson</description>
     </key>
