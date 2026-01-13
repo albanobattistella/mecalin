@@ -1,5 +1,5 @@
-use gtk::prelude::*;
 use gtk::DrawingArea;
+use gtk::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 use std::collections::HashSet;
