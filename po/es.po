@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mecalin 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-12 10:34+0100\n"
+"POT-Creation-Date: 2026-01-13 18:00+0100\n"
 "PO-Revision-Date: 2024-01-12 10:34+0100\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
@@ -16,10 +16,30 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/org.gnome.mecalin.desktop.in:2
-msgid "Mecalin"
-msgstr "Mecalin"
+#: resources/ui/lesson_view.ui:86
+msgid "Continue"
+msgstr ""
 
-#: data/org.gnome.mecalin.desktop.in:3
-msgid "Learn how to type"
-msgstr "Aprende a escribir"
+#: src/main_action_list.rs:59
+msgid "Study room"
+msgstr ""
+
+#: src/main_action_list.rs:60
+msgid "Learn typing fundamentals"
+msgstr ""
+
+#: src/main_action_list.rs:63
+msgid "About"
+msgstr ""
+
+#: src/main_action_list.rs:63
+msgid "Application information"
+msgstr ""
+
+#: src/study_room.rs:63
+msgid "Start Course"
+msgstr ""
+
+#: src/study_room.rs:64
+msgid "Begin or continue typing lessons"
+msgstr ""

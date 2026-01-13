@@ -1,6 +1,6 @@
 [Desktop Entry]
-_Name=Mecalin
-_Comment=Learn how to type
+Name=Mecalin
+Comment=Learn how to type
 Exec=mecalin
 Icon=io.github.nacho.mecalin
 Terminal=false
