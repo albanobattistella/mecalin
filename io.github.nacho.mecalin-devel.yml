@@ -1,4 +1,4 @@
-app-id: org.gnome.mecalin.Devel
+app-id: io.github.nacho.mecalin.Devel
 runtime: org.gnome.Platform
 runtime-version: '46'
 sdk: org.gnome.Sdk
