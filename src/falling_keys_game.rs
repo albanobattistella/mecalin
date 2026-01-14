@@ -265,6 +265,13 @@ impl FallingKeysGame {
             if let Some(drawing_area) = imp.drawing_area.borrow().as_ref() {
                 drawing_area.queue_draw();
             }
+        } else {
+            // Wrong key pressed - decrease score
+            let mut score = imp.score.borrow_mut();
+            if *score > 0 {
+                *score -= 1;
+                imp.score_label.set_text(&format!("Score: {}", *score));
+            }
         }
     }
 
