@@ -128,8 +128,9 @@ impl StudyRoom {
     }
 
     pub fn can_go_back(&self) -> bool {
-        let imp = self.imp();
-        imp.main_stack.visible_child_name().as_deref() == Some("lesson_view")
+        // Since we skip the lesson list, always return false
+        // so the window goes back to main menu
+        false
     }
 
     pub fn go_back(&self) {
