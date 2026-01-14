@@ -40,6 +40,7 @@ mod imp {
         pub current_step_index: Cell<u32>,
         pub current_repetition: Cell<u32>,
         pub course: RefCell<Option<crate::course::Course>>,
+        pub has_mistake: Cell<bool>,
     }
 
     #[glib::object_subclass]
@@ -128,13 +129,15 @@ impl imp::LessonView {
 
                 // Check if the new text would match target text
                 if !target_str.starts_with(&new_text) {
-                    // Mistake made - reset repetition count
-                    if let Some(lesson_view) = lesson_view_clone.upgrade() {
-                        lesson_view.reset_repetition_count();
-                    }
-
                     // Find the last space position or go to beginning
                     let last_space_pos = current_str.rfind(' ').map(|pos| pos + 1).unwrap_or(0);
+
+                    // Only mark as mistake if not at the beginning
+                    if last_space_pos > 0 {
+                        if let Some(lesson_view) = lesson_view_clone.upgrade() {
+                            lesson_view.imp().has_mistake.set(true);
+                        }
+                    }
 
                     // Reset to last space position
                     let corrected_text = &current_str[..last_space_pos];
@@ -296,6 +299,7 @@ impl LessonView {
         }
 
         imp.text_view.buffer().set_text("");
+        imp.has_mistake.set(false);
     }
 
     fn load_step(&self, step_index: u32) {
@@ -304,6 +308,7 @@ impl LessonView {
         let imp = self.imp();
         // Reset repetition count for new step
         imp.current_repetition.set(0);
+        imp.has_mistake.set(false);
 
         let current_lesson_boxed = imp.current_lesson.borrow();
         if let Some(boxed) = current_lesson_boxed.as_ref() {
@@ -381,6 +386,17 @@ impl LessonView {
 
     fn handle_step_completion(&self) {
         let imp = self.imp();
+
+        // Check if there was a mistake during this attempt
+        if imp.has_mistake.get() {
+            // Restart the step - reset repetition count and clear text
+            self.reset_repetition_count();
+            imp.has_mistake.set(false);
+            imp.text_view.buffer().set_text("");
+            imp.text_view.grab_focus();
+            return;
+        }
+
         let current_repetition = imp.current_repetition.get() + 1;
         imp.current_repetition.set(current_repetition);
 
