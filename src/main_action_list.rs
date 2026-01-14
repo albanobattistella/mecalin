@@ -57,10 +57,7 @@ mod imp {
 impl imp::MainActionList {
     fn setup_actions(&self) {
         let actions = [
-            (
-                &gettext("Study room"),
-                &gettext("Learn typing fundamentals"),
-            ),
+            (&gettext("Lessons"), &gettext("Learn typing fundamentals")),
             (
                 &gettext("Falling Keys"),
                 &gettext("Practice with a fun game"),
