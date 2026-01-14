@@ -109,7 +109,26 @@ impl FallingKeysGame {
         keyboard.widget().set_margin_bottom(20);
         imp.keyboard_widget.replace(Some(keyboard));
 
-        // Setup keyboard input on the drawing area
+        // Add falling keys overlay on top of keyboard
+        let keys_overlay = DrawingArea::new();
+        keys_overlay.set_vexpand(true);
+        keys_overlay.set_hexpand(true);
+
+        let falling_keys_clone = imp.falling_keys.clone();
+        keys_overlay.set_draw_func(move |_, cr, _width, _height| {
+            cr.set_source_rgb(1.0, 1.0, 1.0);
+            cr.set_font_size(24.0);
+
+            for key in falling_keys_clone.borrow().iter() {
+                cr.move_to(key.x, key.y);
+                cr.show_text(&key.key.to_string()).unwrap();
+            }
+        });
+
+        imp.game_area.add_overlay(&keys_overlay);
+        imp.drawing_area.replace(Some(keys_overlay.clone()));
+
+        // Setup keyboard input on the keys overlay
         let key_controller = gtk::EventControllerKey::new();
         let obj = self.downgrade();
         key_controller.connect_key_pressed(move |_, key, _, _| {
@@ -120,10 +139,10 @@ impl FallingKeysGame {
             }
             glib::Propagation::Stop
         });
-        drawing_area.add_controller(key_controller);
+        keys_overlay.add_controller(key_controller);
 
         // Grab focus when shown
-        drawing_area.grab_focus();
+        keys_overlay.grab_focus();
 
         // Start game loop
         self.start_game_loop();
