@@ -1,4 +1,3 @@
-use gettextrs::gettext;
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{glib, DrawingArea};
@@ -419,8 +418,10 @@ impl ScrollingLanesGame {
         *imp.speed.borrow_mut() = 2.0;
         *imp.game_over.borrow_mut() = false;
 
-        imp.score_label.set_text(&gettext("Score: 0"));
-        imp.level_label.set_text(&gettext("Level: 1"));
+        imp.score_label
+            .set_text(&i18n_fmt! { i18n_fmt("Score: {}", 0) });
+        imp.level_label
+            .set_text(&i18n_fmt! { i18n_fmt("Level: {}", 1) });
 
         for lane in imp.lanes.borrow().iter() {
             lane.queue_draw();

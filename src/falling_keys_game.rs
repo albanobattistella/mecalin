@@ -1,4 +1,3 @@
-use gettextrs::gettext;
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{glib, DrawingArea};
@@ -385,8 +384,10 @@ impl FallingKeysGame {
         *imp.speed.borrow_mut() = 2.0;
         *imp.game_over.borrow_mut() = false;
 
-        imp.score_label.set_text(&gettext("Score: 0"));
-        imp.difficulty_label.set_text(&gettext("Level: 1"));
+        imp.score_label
+            .set_text(&i18n_fmt! { i18n_fmt("Score: {}", 0) });
+        imp.difficulty_label
+            .set_text(&i18n_fmt! { i18n_fmt("Level: {}", 1) });
 
         if let Some(drawing_area) = imp.drawing_area.borrow().as_ref() {
             drawing_area.grab_focus();
