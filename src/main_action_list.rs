@@ -43,6 +43,7 @@ mod imp {
             SIGNALS.get_or_init(|| {
                 vec![
                     glib::subclass::Signal::builder("study-room-selected").build(),
+                    glib::subclass::Signal::builder("game-selected").build(),
                     glib::subclass::Signal::builder("about-selected").build(),
                 ]
             })
@@ -59,7 +60,10 @@ impl imp::MainActionList {
                 &gettext("Study room"),
                 &gettext("Learn typing fundamentals"),
             ),
-            // TODO: (&gettext("Skill game"), &gettext("Practice with games")),
+            (
+                &gettext("Falling Keys"),
+                &gettext("Practice with a fun game"),
+            ),
             (&gettext("About"), &gettext("Application information")),
         ];
 
@@ -95,7 +99,8 @@ impl imp::MainActionList {
             if let Some(obj) = obj.upgrade() {
                 match row.index() {
                     0 => obj.emit_by_name::<()>("study-room-selected", &[]),
-                    1 => obj.emit_by_name::<()>("about-selected", &[]),
+                    1 => obj.emit_by_name::<()>("game-selected", &[]),
+                    2 => obj.emit_by_name::<()>("about-selected", &[]),
                     _ => {}
                 }
             }

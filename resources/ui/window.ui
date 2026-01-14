@@ -43,6 +43,14 @@
                 </property>
               </object>
             </child>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">game</property>
+                <property name="child">
+                  <object class="FallingKeysGame" id="falling_keys_game_widget"/>
+                </property>
+              </object>
+            </child>
           </object>
         </property>
       </object>

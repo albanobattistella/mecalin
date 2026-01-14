@@ -7,6 +7,7 @@ use libadwaita::subclass::prelude::*;
 
 use crate::config;
 use crate::course::Lesson;
+use crate::falling_keys_game::FallingKeysGame;
 use crate::lesson_view::LessonView;
 use crate::main_action_list::MainActionList;
 use crate::study_room::StudyRoom;
@@ -43,6 +44,7 @@ mod imp {
             LessonView::ensure_type();
             TextView::ensure_type();
             TargetTextView::ensure_type();
+            FallingKeysGame::ensure_type();
             klass.bind_template();
         }
 
@@ -82,25 +84,51 @@ impl MecalinWindow {
         self.setup_lesson_view_signals();
     }
 
+    pub fn show_game(&self) {
+        let imp = self.imp();
+        imp.main_stack.set_visible_child_name("game");
+        imp.back_button.set_visible(true);
+        imp.window_title.set_title("Falling Keys");
+        imp.window_title.set_subtitle("");
+
+        // Reset game when showing
+        if let Some(game) = imp.main_stack.child_by_name("game") {
+            if let Ok(game) = game.downcast::<FallingKeysGame>() {
+                game.reset();
+            }
+        }
+    }
+
     pub fn go_back(&self) {
         let imp = self.imp();
         let current_page = imp.main_stack.visible_child_name();
 
-        if let Some("study_room") = current_page.as_deref() {
-            // Check if we're in a lesson view within the study room
-            if let Some(study_room) = imp.main_stack.visible_child() {
-                if let Ok(study_room) = study_room.downcast::<StudyRoom>() {
-                    if study_room.can_go_back() {
-                        study_room.go_back();
-                        return;
+        if let Some(page_name) = current_page.as_deref() {
+            match page_name {
+                "study_room" => {
+                    // Check if we're in a lesson view within the study room
+                    if let Some(study_room) = imp.main_stack.visible_child() {
+                        if let Ok(study_room) = study_room.downcast::<StudyRoom>() {
+                            if study_room.can_go_back() {
+                                study_room.go_back();
+                                return;
+                            }
+                        }
                     }
+                    // If we can't go back within study room, go to main menu
+                    imp.main_stack.set_visible_child_name("main_menu");
+                    imp.back_button.set_visible(false);
+                    imp.window_title.set_title("Mecalin");
+                    imp.window_title.set_subtitle("");
                 }
+                "game" => {
+                    imp.main_stack.set_visible_child_name("main_menu");
+                    imp.back_button.set_visible(false);
+                    imp.window_title.set_title("Mecalin");
+                    imp.window_title.set_subtitle("");
+                }
+                _ => {}
             }
-            // If we can't go back within study room, go to main menu
-            imp.main_stack.set_visible_child_name("main_menu");
-            imp.back_button.set_visible(false);
-            imp.window_title.set_title("Mecalin");
-            imp.window_title.set_subtitle("");
         }
     }
 
@@ -219,6 +247,15 @@ impl imp::MecalinWindow {
             .connect_local("study-room-selected", false, move |_| {
                 if let Some(window) = window.upgrade() {
                     window.show_study_room();
+                }
+                None
+            });
+
+        let window = self.obj().downgrade();
+        self.main_action_list_widget
+            .connect_local("game-selected", false, move |_| {
+                if let Some(window) = window.upgrade() {
+                    window.show_game();
                 }
                 None
             });

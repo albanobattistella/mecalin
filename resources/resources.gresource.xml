@@ -7,6 +7,7 @@
     <file preprocess="xml-stripblanks">ui/lesson_view.ui</file>
     <file preprocess="xml-stripblanks">ui/target_text_view.ui</file>
     <file preprocess="xml-stripblanks">ui/text_view.ui</file>
+    <file preprocess="xml-stripblanks">ui/falling_keys_game.ui</file>
     <file>icons/io.github.nacho.mecalin.svg</file>
   </gresource>
 </gresources>

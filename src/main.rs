@@ -3,6 +3,7 @@ use gio::prelude::*;
 mod application;
 mod config;
 mod course;
+mod falling_keys_game;
 mod keyboard_widget;
 mod lesson_view;
 mod main_action_list;
