@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mecalin 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-14 15:26+0100\n"
-"PO-Revision-Date: 2024-01-12 10:34+0100\n"
+"POT-Creation-Date: 2026-01-14 15:32+0100\n"
+"PO-Revision-Date: 2026-01-14 15:35+0100\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -18,52 +18,63 @@ msgstr ""
 
 #: data/io.github.nacho.mecalin.desktop.in:3
 msgid "Mecalin"
-msgstr ""
+msgstr "Mecalin"
 
 #: data/io.github.nacho.mecalin.desktop.in:4
 msgid "Learn how to type"
-msgstr ""
+msgstr "Aprende a escribir"
 
 #: resources/ui/lesson_view.ui:87
 msgid "Continue"
-msgstr ""
+msgstr "Continuar"
+
+#: src/falling_keys_game.rs:252 src/falling_keys_game.rs:274
+#: src/falling_keys_game.rs:388 src/scrolling_lanes_game.rs:309
+#: src/scrolling_lanes_game.rs:323 src/scrolling_lanes_game.rs:422
+msgid "Score: {}"
+msgstr "Puntuación: {}"
+
+#: src/falling_keys_game.rs:259 src/falling_keys_game.rs:390
+#: src/scrolling_lanes_game.rs:315 src/scrolling_lanes_game.rs:424
+msgid "Level: {}"
+msgstr "Nivel: {}"
 
 #: src/main_action_list.rs:60
 msgid "Lessons"
-msgstr ""
+msgstr "Lecciones"
 
 #: src/main_action_list.rs:60
 msgid "Learn typing fundamentals"
-msgstr ""
+msgstr "Aprende los fundamentos de mecanografía"
 
 #: src/main_action_list.rs:62 src/window.rs:100
 msgid "Falling Keys"
-msgstr ""
+msgstr "Teclas Cayendo"
 
 #: src/main_action_list.rs:63
 msgid "Practice with a fun game"
-msgstr ""
+msgstr "Practica con un juego divertido"
 
 #: src/main_action_list.rs:66 src/window.rs:115
 msgid "Scrolling Lanes"
-msgstr ""
+msgstr "Carriles Deslizantes"
 
 #: src/main_action_list.rs:67
 msgid "Type fast in multiple lanes"
-msgstr ""
+msgstr "Escribe rápido en múltiples carriles"
 
 #: src/main_action_list.rs:69
 msgid "About"
-msgstr ""
+msgstr "Acerca de"
 
 #: src/main_action_list.rs:69
 msgid "Application information"
-msgstr ""
+msgstr "Información de la aplicación"
 
 #: src/window.rs:193
 msgid "Lesson {}"
-msgstr ""
+msgstr "Lección {}"
 
 #: src/window.rs:198
 msgid "Lesson {}: Step {}/{}"
-msgstr ""
+msgstr "Lección {}: Paso {}/{}"
