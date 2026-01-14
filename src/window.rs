@@ -118,16 +118,11 @@ impl MecalinWindow {
         let imp = self.imp();
         let current_page = imp.main_stack.visible_child_name();
 
-        if let Some(page_name) = current_page.as_deref() {
-            match page_name {
-                "lessons" | "game" | "lanes_game" => {
-                    imp.main_stack.set_visible_child_name("main_menu");
-                    imp.back_button.set_visible(false);
-                    imp.window_title.set_title("Mecalin");
-                    imp.window_title.set_subtitle("");
-                }
-                _ => {}
-            }
+        if let Some("lessons" | "game" | "lanes_game") = current_page.as_deref() {
+            imp.main_stack.set_visible_child_name("main_menu");
+            imp.back_button.set_visible(false);
+            imp.window_title.set_title("Mecalin");
+            imp.window_title.set_subtitle("");
         }
     }
 
