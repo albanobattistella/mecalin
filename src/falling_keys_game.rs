@@ -250,15 +250,15 @@ impl FallingKeysGame {
 
             let mut score = imp.score.borrow_mut();
             *score += 1;
-            imp.score_label
-                .set_text(&i18n_fmt! { i18n_fmt("Score: {score}") });
+            let score_text = i18n_fmt! { i18n_fmt("Score: {}", *score) };
+            imp.score_label.set_text(&score_text);
 
             // Increase difficulty every 10 points
             if (*score).is_multiple_of(10) {
                 let mut difficulty = imp.difficulty.borrow_mut();
                 *difficulty += 1;
-                imp.difficulty_label
-                    .set_text(&i18n_fmt! { i18n_fmt("Level: {difficulty}") });
+                let level_text = i18n_fmt! { i18n_fmt("Level: {}", *difficulty) };
+                imp.difficulty_label.set_text(&level_text);
 
                 let mut speed = imp.speed.borrow_mut();
                 *speed += 0.5;
@@ -272,8 +272,8 @@ impl FallingKeysGame {
             let mut score = imp.score.borrow_mut();
             if *score > 0 {
                 *score -= 1;
-                imp.score_label
-                    .set_text(&i18n_fmt! { i18n_fmt("Score: {score}") });
+                let score_text = i18n_fmt! { i18n_fmt("Score: {}", *score) };
+                imp.score_label.set_text(&score_text);
             }
         }
     }
