@@ -42,6 +42,9 @@ mod imp {
             self.parent_constructed();
             self.setup_room();
             self.setup_signals();
+
+            // Automatically show lesson view
+            self.obj().show_lesson_view();
         }
     }
 
