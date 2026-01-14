@@ -283,7 +283,15 @@ impl ScrollingLanesGame {
             if let Some(lane_texts) = texts.get_mut(current_lane) {
                 // Find leftmost text that starts with this character
                 if let Some(pos) = lane_texts.iter().position(|t| t.text.starts_with(c)) {
-                    lane_texts.remove(pos);
+                    // Remove first character from the text
+                    let text = &mut lane_texts[pos].text;
+                    text.remove(0);
+
+                    // If text is now empty, remove it completely
+                    if text.is_empty() {
+                        lane_texts.remove(pos);
+                    }
+
                     (true, true)
                 } else {
                     (false, true)
