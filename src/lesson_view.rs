@@ -107,10 +107,10 @@ impl imp::LessonView {
             let lesson_view_clone = self.obj().downgrade();
             let lesson_view_clone2 = self.obj().downgrade();
 
-            let buffer = self.text_view.text_view().buffer();
+            let buffer = self.text_view.buffer();
             buffer.connect_insert_text(move |buffer, _iter, text| {
                 let current_text = buffer.text(&buffer.start_iter(), &buffer.end_iter(), false);
-                let target_buffer = target_text_view.text_view().buffer();
+                let target_buffer = target_text_view.buffer();
                 let target_text = target_buffer.text(
                     &target_buffer.start_iter(),
                     &target_buffer.end_iter(),
@@ -148,7 +148,7 @@ impl imp::LessonView {
 
             buffer.connect_changed(move |buffer| {
                 let typed_text = buffer.text(&buffer.start_iter(), &buffer.end_iter(), false);
-                let target_buffer = target_text_view_clone.text_view().buffer();
+                let target_buffer = target_text_view_clone.buffer();
                 let target_text = target_buffer.text(
                     &target_buffer.start_iter(),
                     &target_buffer.end_iter(),
@@ -272,7 +272,7 @@ impl LessonView {
                     self.update_repetition_label();
 
                     // Focus the text view for immediate typing
-                    imp.text_view.text_view().grab_focus();
+                    imp.text_view.grab_focus();
                 }
 
                 // Extract unique characters from the lesson text for keyboard display
@@ -290,7 +290,7 @@ impl LessonView {
             }
         }
 
-        imp.text_view.set_text("");
+        imp.text_view.buffer().set_text("");
     }
 
     pub fn load_step(&self, step_index: u32) {
@@ -322,11 +322,11 @@ impl LessonView {
                         imp.continue_button.set_visible(false);
                         imp.text_container.set_visible(true);
                         imp.target_text_view.set_text(&step.text);
-                        imp.text_view.set_text("");
+                        imp.text_view.buffer().set_text("");
                         self.update_repetition_label();
 
                         // Focus the text view for immediate typing
-                        imp.text_view.text_view().grab_focus();
+                        imp.text_view.grab_focus();
                     }
 
                     // Update keyboard for this step
@@ -391,10 +391,10 @@ impl LessonView {
                         self.advance_to_next_step();
                     } else {
                         // Need more repetitions, clear text for next attempt
-                        imp.text_view.set_text("");
+                        imp.text_view.buffer().set_text("");
 
                         // Focus the text view for next repetition
-                        imp.text_view.text_view().grab_focus();
+                        imp.text_view.grab_focus();
                     }
                 }
             }
@@ -501,7 +501,7 @@ impl LessonView {
                     imp.target_text_view
                         .set_text(&gettext("Lesson completed! Well done!"));
                 }
-                imp.text_view.set_text("");
+                imp.text_view.buffer().set_text("");
             }
         }
     }

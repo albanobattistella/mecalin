@@ -35,12 +35,14 @@
         <property name="orientation">horizontal</property>
         <property name="halign">fill</property>
         <property name="hexpand">true</property>
+        <property name="vexpand">true</property>
         <property name="spacing">12</property>
         <child>
           <object class="GtkBox">
             <property name="orientation">vertical</property>
             <property name="spacing">12</property>
             <property name="hexpand">true</property>
+            <property name="valign">start</property>
             <child>
               <object class="MecalinTargetTextView" id="target_text_view">
                 <property name="halign">center</property>
@@ -51,7 +53,6 @@
               <object class="MecalinTextView" id="text_view">
                 <property name="halign">center</property>
                 <property name="width-request">400</property>
-                <property name="height-request">100</property>
               </object>
             </child>
           </object>

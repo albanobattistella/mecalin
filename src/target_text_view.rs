@@ -8,8 +8,6 @@ mod imp {
     #[derive(Default, gtk::CompositeTemplate)]
     #[template(resource = "/io/github/nacho/mecalin/ui/target_text_view.ui")]
     pub struct TargetTextView {
-        #[template_child]
-        pub text_view: TemplateChild<gtk::TextView>,
         pub cursor_position: Cell<i32>,
     }
 
@@ -17,7 +15,7 @@ mod imp {
     impl ObjectSubclass for TargetTextView {
         const NAME: &'static str = "MecalinTargetTextView";
         type Type = super::TargetTextView;
-        type ParentType = gtk::Box;
+        type ParentType = gtk::TextView;
 
         fn class_init(klass: &mut Self::Class) {
             klass.bind_template();
@@ -31,7 +29,9 @@ mod imp {
     impl ObjectImpl for TargetTextView {
         fn constructed(&self) {
             self.parent_constructed();
-            self.setup_text_view();
+            self.obj().set_can_target(false);
+            self.obj().set_cursor_visible(false);
+            self.obj().set_monospace(true);
         }
     }
 
@@ -42,50 +42,36 @@ mod imp {
         }
     }
 
-    impl BoxImpl for TargetTextView {}
+    impl TextViewImpl for TargetTextView {}
 }
 
 impl imp::TargetTextView {
-    fn setup_text_view(&self) {
-        self.text_view.set_can_target(false);
-        self.text_view.set_cursor_visible(false);
-        self.text_view.set_monospace(true);
-    }
-
     fn draw_cursor(&self, snapshot: &gtk::Snapshot) {
         let cursor_pos = self.cursor_position.get();
-        let buffer = self.text_view.buffer();
+        let buffer = self.obj().buffer();
 
         let mut iter = buffer.start_iter();
         iter.forward_chars(cursor_pos);
-        let rect = self.text_view.iter_location(&iter);
+        let rect = self.obj().iter_location(&iter);
 
-        // Convert text view coordinates to widget coordinates
         let (x, y) =
-            self.text_view
+            self.obj()
                 .buffer_to_window_coords(gtk::TextWindowType::Widget, rect.x(), rect.y());
 
-        // Get the text view's allocation to offset properly
-        let allocation = self.text_view.allocation();
-        let final_x = allocation.x() + x;
-        let final_y = allocation.y() + y;
-
-        // Get caret color from style context
         #[allow(deprecated)]
         let style_ctx = self.obj().style_context();
         #[allow(deprecated)]
         let color = style_ctx.color();
 
-        let cursor_rect =
-            gtk::graphene::Rect::new(final_x as f32, final_y as f32, 2.0, rect.height() as f32);
+        let cursor_rect = gtk::graphene::Rect::new(x as f32, y as f32, 2.0, rect.height() as f32);
         snapshot.append_color(&color, &cursor_rect);
     }
 }
 
 glib::wrapper! {
     pub struct TargetTextView(ObjectSubclass<imp::TargetTextView>)
-        @extends gtk::Box, gtk::Widget,
-        @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
+        @extends gtk::TextView, gtk::Widget,
+        @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Scrollable;
 }
 
 impl TargetTextView {
@@ -93,12 +79,8 @@ impl TargetTextView {
         glib::Object::new()
     }
 
-    pub fn text_view(&self) -> &gtk::TextView {
-        &self.imp().text_view
-    }
-
     pub fn set_text(&self, text: &str) {
-        let buffer = self.text_view().buffer();
+        let buffer = self.buffer();
         buffer.set_text(text);
         buffer.place_cursor(&buffer.start_iter());
     }
