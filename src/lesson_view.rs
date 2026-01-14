@@ -210,10 +210,17 @@ impl LessonView {
 
         let settings = gio::Settings::new("io.github.nacho.mecalin");
         let current_lesson = settings.uint("current-lesson");
+        let current_step = settings.uint("current-step");
 
         if let Some(lesson) = course.get_lesson(current_lesson) {
             self.set_course(course.clone());
             self.set_lesson(lesson);
+
+            // Load the saved step
+            if current_step > 0 {
+                let step_index = current_step - 1;
+                self.load_step(step_index);
+            }
         }
     }
 
