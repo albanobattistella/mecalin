@@ -37,9 +37,9 @@
             </child>
             <child>
               <object class="GtkStackPage">
-                <property name="name">study_room</property>
+                <property name="name">lessons</property>
                 <property name="child">
-                  <object class="StudyRoom" id="study_room_widget"/>
+                  <object class="LessonView" id="lesson_view_widget"/>
                 </property>
               </object>
             </child>

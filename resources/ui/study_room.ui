@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<interface>
-  <template class="StudyRoom" parent="GtkBox">
-    <property name="orientation">vertical</property>
-    <child>
-      <object class="LessonView" id="lesson_view_widget"/>
-    </child>
-  </template>
-</interface>

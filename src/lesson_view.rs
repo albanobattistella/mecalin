@@ -75,6 +75,7 @@ mod imp {
             self.setup_keyboard();
             self.setup_signals();
             self.setup_settings_signals();
+            self.obj().load_course_and_lesson();
         }
     }
 
@@ -201,6 +202,19 @@ glib::wrapper! {
 impl LessonView {
     pub fn new() -> Self {
         glib::Object::new()
+    }
+
+    pub fn load_course_and_lesson(&self) {
+        let language = crate::utils::language_from_locale();
+        let course = crate::course::Course::new_with_language(language).unwrap_or_default();
+
+        let settings = gio::Settings::new("io.github.nacho.mecalin");
+        let current_lesson = settings.uint("current-lesson");
+
+        if let Some(lesson) = course.get_lesson(current_lesson) {
+            self.set_course(course.clone());
+            self.set_lesson(lesson);
+        }
     }
 
     pub fn set_lesson(&self, lesson: &Lesson) {

@@ -11,7 +11,6 @@ use crate::falling_keys_game::FallingKeysGame;
 use crate::lesson_view::LessonView;
 use crate::main_action_list::MainActionList;
 use crate::scrolling_lanes_game::ScrollingLanesGame;
-use crate::study_room::StudyRoom;
 use crate::target_text_view::TargetTextView;
 use crate::text_view::TextView;
 
@@ -41,7 +40,6 @@ mod imp {
 
         fn class_init(klass: &mut Self::Class) {
             MainActionList::ensure_type();
-            StudyRoom::ensure_type();
             LessonView::ensure_type();
             TextView::ensure_type();
             TargetTextView::ensure_type();
@@ -81,7 +79,7 @@ impl MecalinWindow {
 
     pub fn show_study_room(&self) {
         let imp = self.imp();
-        imp.main_stack.set_visible_child_name("study_room");
+        imp.main_stack.set_visible_child_name("lessons");
         imp.back_button.set_visible(true);
         self.setup_lesson_view_signals();
     }
@@ -122,7 +120,7 @@ impl MecalinWindow {
 
         if let Some(page_name) = current_page.as_deref() {
             match page_name {
-                "study_room" | "game" | "lanes_game" => {
+                "lessons" | "game" | "lanes_game" => {
                     imp.main_stack.set_visible_child_name("main_menu");
                     imp.back_button.set_visible(false);
                     imp.window_title.set_title("Mecalin");
@@ -160,10 +158,8 @@ impl MecalinWindow {
 
     fn setup_lesson_view_signals(&self) {
         let imp = self.imp();
-        if let Some(study_room) = imp.main_stack.child_by_name("study_room") {
-            if let Ok(study_room) = study_room.downcast::<StudyRoom>() {
-                let lesson_view = study_room.lesson_view();
-
+        if let Some(lesson_view) = imp.main_stack.child_by_name("lessons") {
+            if let Ok(lesson_view) = lesson_view.downcast::<LessonView>() {
                 let window = self.downgrade();
                 lesson_view.connect_notify_local(Some("current-lesson"), move |lesson_view, _| {
                     if let Some(window) = window.upgrade() {
