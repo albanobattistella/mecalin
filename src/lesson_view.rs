@@ -132,10 +132,13 @@ impl imp::LessonView {
                     // Find the last space position or go to beginning
                     let last_space_pos = current_str.rfind(' ').map(|pos| pos + 1).unwrap_or(0);
 
-                    // Only mark as mistake if not at the beginning
-                    if last_space_pos > 0 {
-                        if let Some(lesson_view) = lesson_view_clone.upgrade() {
-                            lesson_view.imp().has_mistake.set(true);
+                    // Mark as mistake if:
+                    // - Not at the beginning (last_space_pos > 0), OR
+                    // - At the beginning but on a repetition after the first (current_repetition > 0)
+                    if let Some(lesson_view) = lesson_view_clone.upgrade() {
+                        let imp = lesson_view.imp();
+                        if last_space_pos > 0 || imp.current_repetition.get() > 0 {
+                            imp.has_mistake.set(true);
                         }
                     }
 
