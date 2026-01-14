@@ -1,6 +1,8 @@
+use gettextrs::gettext;
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{glib, DrawingArea};
+use i18n_format::i18n_fmt;
 use rand::Rng;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -305,19 +307,22 @@ impl ScrollingLanesGame {
             let mut score = imp.score.borrow_mut();
             if found {
                 *score += 1;
-                imp.score_label.set_text(&format!("Score: {}", *score));
+                imp.score_label
+                    .set_text(&i18n_fmt! { i18n_fmt("Score: {score}") });
 
                 if (*score).is_multiple_of(10) {
                     let mut difficulty = imp.difficulty.borrow_mut();
                     *difficulty += 1;
-                    imp.level_label.set_text(&format!("Level: {}", *difficulty));
+                    imp.level_label
+                        .set_text(&i18n_fmt! { i18n_fmt("Level: {difficulty}") });
 
                     let mut speed = imp.speed.borrow_mut();
                     *speed += 0.5;
                 }
             } else if *score > 0 {
                 *score -= 1;
-                imp.score_label.set_text(&format!("Score: {}", *score));
+                imp.score_label
+                    .set_text(&i18n_fmt! { i18n_fmt("Score: {score}") });
             }
         }
     }
@@ -414,8 +419,8 @@ impl ScrollingLanesGame {
         *imp.speed.borrow_mut() = 2.0;
         *imp.game_over.borrow_mut() = false;
 
-        imp.score_label.set_text("Score: 0");
-        imp.level_label.set_text("Level: 1");
+        imp.score_label.set_text(&gettext("Score: 0"));
+        imp.level_label.set_text(&gettext("Level: 1"));
 
         for lane in imp.lanes.borrow().iter() {
             lane.queue_draw();

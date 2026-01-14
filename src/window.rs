@@ -1,3 +1,4 @@
+use gettextrs::gettext;
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use i18n_format::i18n_fmt;
@@ -96,7 +97,7 @@ impl MecalinWindow {
         let imp = self.imp();
         imp.main_stack.set_visible_child_name("game");
         imp.back_button.set_visible(true);
-        imp.window_title.set_title("Falling Keys");
+        imp.window_title.set_title(&gettext("Falling Keys"));
         imp.window_title.set_subtitle("");
 
         // Reset game when showing
@@ -111,7 +112,7 @@ impl MecalinWindow {
         let imp = self.imp();
         imp.main_stack.set_visible_child_name("lanes_game");
         imp.back_button.set_visible(true);
-        imp.window_title.set_title("Scrolling Lanes");
+        imp.window_title.set_title(&gettext("Scrolling Lanes"));
         imp.window_title.set_subtitle("");
 
         // Reset game when showing

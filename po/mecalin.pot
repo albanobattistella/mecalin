@@ -1,19 +1,20 @@
-# Spanish translations for mecalin package.
-# Copyright (C) 2024 THE mecalin'S COPYRIGHT HOLDER
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the mecalin package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: mecalin 0.1.0\n"
+"Project-Id-Version: mecalin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-14 15:26+0100\n"
-"PO-Revision-Date: 2024-01-12 10:34+0100\n"
-"Last-Translator: \n"
-"Language-Team: Spanish\n"
-"Language: es\n"
+"POT-Creation-Date: 2026-01-14 15:27+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/io.github.nacho.mecalin.desktop.in:3
@@ -26,6 +27,23 @@ msgstr ""
 
 #: resources/ui/lesson_view.ui:87
 msgid "Continue"
+msgstr ""
+
+#: src/falling_keys_game.rs:254 src/falling_keys_game.rs:276
+#: src/scrolling_lanes_game.rs:311 src/scrolling_lanes_game.rs:325
+msgid "Score: {score}"
+msgstr ""
+
+#: src/falling_keys_game.rs:261 src/scrolling_lanes_game.rs:317
+msgid "Level: {difficulty}"
+msgstr ""
+
+#: src/falling_keys_game.rs:388 src/scrolling_lanes_game.rs:422
+msgid "Score: 0"
+msgstr ""
+
+#: src/falling_keys_game.rs:389 src/scrolling_lanes_game.rs:423
+msgid "Level: 1"
 msgstr ""
 
 #: src/main_action_list.rs:60
