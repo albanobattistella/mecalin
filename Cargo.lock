@@ -834,7 +834,7 @@ checksum = "adb6935a6f5c20170eeceb1a3835a49e12e19d792f6dd344ccc76a985ca5a6ca"
 
 [[package]]
 name = "teclas"
-version = "2.0.0"
+version = "3.0.0"
 dependencies = [
  "anyhow",
  "gettext-rs 0.8.0",
