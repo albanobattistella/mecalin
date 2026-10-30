@@ -74,14 +74,14 @@ impl TeclasApplication {
             gio::ActionEntry::builder("about")
                 .activate(|app: &Self, _, _| {
                     let dialog = adw::AboutDialog::builder()
-                        .application_name("Mecalin")
+                        .application_name("Teclas")
                         .application_icon(crate::config::APPLICATION_ID)
                         .version(crate::config::VERSION)
                         .developer_name("Ignacio Casal Quinteiro")
                         .developers(["Ignacio Casal Quinteiro"])
                         .license_type(gtk::License::Gpl30)
-                        .website("https://github.com/nacho/mecalin")
-                        .issue_url("https://github.com/nacho/mecalin/issues")
+                        .website("https://github.com/nacho/teclas")
+                        .issue_url("https://github.com/nacho/teclas/issues")
                         .copyright("© 2026 Ignacio Casal Quinteiro")
                         .translator_credits(gettext("translator-credits"))
                         .build();

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: teclas 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 11:01+0200\n"
+"POT-Creation-Date: 2026-10-30 09:03+0000\n"
 "PO-Revision-Date: 2026-08-11 11:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: Brazilian Portuguese\n"
@@ -16,15 +16,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/io.github.nacho.mecalin.desktop.in:3
-msgid "Mecalin"
-msgstr "Mecalin"
+#: data/io.github.nacho.teclas.desktop.in:2
+msgid "Teclas"
+msgstr "Teclas"
 
-#: data/io.github.nacho.mecalin.desktop.in:4
+#: data/io.github.nacho.teclas.desktop.in:3
 msgid "Learn how to type"
 msgstr "Aprenda a digitar"
 
-#: data/io.github.nacho.mecalin.desktop.in:10
+#: data/io.github.nacho.teclas.desktop.in:9
 msgid "keyboard;touch type;touch typing;typing;typing tutor;"
 msgstr "teclado;digitação;escrever;tutor de digitação;"
 
@@ -56,8 +56,8 @@ msgid "Start Lesson"
 msgstr "Iniciar lição"
 
 #: resources/ui/lessons_view.ui:6
-msgid "_About Mecalin"
-msgstr "_Sobre o Mecalin"
+msgid "_About Teclas"
+msgstr "_Sobre o Teclas"
 
 #: resources/ui/lessons_view.ui:13
 msgid "Lessons"
@@ -72,8 +72,8 @@ msgid "Welcome"
 msgstr "Bem-vindo"
 
 #: resources/ui/welcome_view.ui:25
-msgid "Welcome to Mecalin"
-msgstr "Bem-vindo ao Mecalin"
+msgid "Welcome to Teclas"
+msgstr "Bem-vindo ao Teclas"
 
 #: resources/ui/welcome_view.ui:26
 msgid ""
@@ -122,6 +122,16 @@ msgstr ""
 #: src/application.rs:92
 msgid "Learn geography"
 msgstr "Aprender geografia"
+
+#: src/lesson_view.rs:270
+#, rust-format
+msgid "Lesson {}: Step {}/{}"
+msgstr ""
+
+#: src/lesson_view.rs:460
+#, rust-format
+msgid "{}/{} Good"
+msgstr ""
 
 #: src/lessons_view.rs:96
 msgid "Your system keyboard layout isn’t supported yet — showing US English"

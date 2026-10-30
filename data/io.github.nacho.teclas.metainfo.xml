@@ -8,7 +8,7 @@
     <id>io.github.nacho.mecalin</id>
   </replaces>
   
-  <name>Mecalin</name>
+  <name>Teclas</name>
   
   <summary>Learn touch typing</summary>
   <summary xml:lang="es">Aprende mecanografía</summary>
@@ -30,31 +30,31 @@
   
   <description>
     <p>
-      Mecalin is a modern typing tutor application that helps you learn and improve your touch typing skills
+      Teclas is a modern typing tutor application that helps you learn and improve your touch typing skills
       through structured lessons. It provides a clean and intuitive interface for practicing typing.
     </p>
     <p xml:lang="es">
-      Mecalin es una aplicación moderna para aprender mecanografía que te ayuda a aprender y mejorar tus habilidades de escritura táctil.
+      Teclas es una aplicación moderna para aprender mecanografía que te ayuda a aprender y mejorar tus habilidades de escritura táctil.
       Proporciona una interfaz limpia e intuitiva para practicar mecanografía.
     </p>
     <p xml:lang="fr">
-      Mecalin est une application moderne d'apprentissage de la dactylographie qui vous aide à apprendre et améliorer vos compétences de frappe au toucher.
+      Teclas est une application moderne d'apprentissage de la dactylographie qui vous aide à apprendre et améliorer vos compétences de frappe au toucher.
       Elle offre une interface claire et intuitive pour pratiquer la dactylographie.
     </p>
     <p xml:lang="gl">
-      Mecalin é unha aplicación moderna para aprender mecanografía que che axuda a aprender e mellorar as túas habilidades de escritura táctil.
+      Teclas é unha aplicación moderna para aprender mecanografía que che axuda a aprender e mellorar as túas habilidades de escritura táctil.
       Proporciona unha interface limpa e intuitiva para practicar mecanografía.
     </p>
     <p xml:lang="it">
-      Mecalin è un'applicazione moderna per imparare a digitare che ti aiuta ad apprendere e migliorare le tue abilità di dattilografia.
+      Teclas è un'applicazione moderna per imparare a digitare che ti aiuta ad apprendere e migliorare le tue abilità di dattilografia.
       Fornisce un'interfaccia pulita e intuitiva per esercitarsi nella digitazione.
     </p>
     <p xml:lang="pl">
-      Mecalin to nowoczesna aplikacja do nauki pisania, która pomaga nauczyć się i poprawić umiejętności pisania bezwzrokowego.
+      Teclas to nowoczesna aplikacja do nauki pisania, która pomaga nauczyć się i poprawić umiejętności pisania bezwzrokowego.
       Zapewnia przejrzysty i intuicyjny interfejs do ćwiczenia pisania.
     </p>
     <p xml:lang="pt">
-      Mecalin é uma aplicação moderna de aprendizagem de mecanografia que o ajuda a aprender e melhorar as suas capacidades de escrita táctil.
+      Teclas é uma aplicação moderna de aprendizagem de mecanografia que o ajuda a aprender e melhorar as suas capacidades de escrita táctil.
       Fornece uma interface limpa e intuitiva para praticar mecanografia.
     </p>
     <p>
@@ -93,8 +93,8 @@
   
   <launchable type="desktop-id">io.github.nacho.teclas.desktop</launchable>
   
-  <url type="homepage">https://github.com/nacho/mecalin</url>
-  <url type="vcs-browser">https://github.com/nacho/mecalin</url>
+  <url type="homepage">https://github.com/nacho/teclas</url>
+  <url type="vcs-browser">https://github.com/nacho/teclas</url>
   
   <categories>
     <category>Education</category>
@@ -115,7 +115,7 @@
   <screenshots>
     <screenshot type="default">
       <caption>Typing lesson</caption>
-      <image>https://raw.githubusercontent.com/nacho/mecalin/main/data/screenshots/1-lesson-view.png</image>
+      <image>https://raw.githubusercontent.com/nacho/teclas/main/data/screenshots/1-lesson-view.png</image>
     </screenshot>
   </screenshots>
   

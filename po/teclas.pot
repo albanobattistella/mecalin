@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: teclas\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 09:01+0000\n"
+"POT-Creation-Date: 2026-10-30 09:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/io.github.nacho.teclas.desktop.in:2
-msgid "Mecalin"
+msgid "Teclas"
 msgstr ""
 
 #: data/io.github.nacho.teclas.desktop.in:3
@@ -55,7 +55,7 @@ msgid "Start Lesson"
 msgstr ""
 
 #: resources/ui/lessons_view.ui:6
-msgid "_About Mecalin"
+msgid "_About Teclas"
 msgstr ""
 
 #: resources/ui/lessons_view.ui:13
@@ -71,7 +71,7 @@ msgid "Welcome"
 msgstr ""
 
 #: resources/ui/welcome_view.ui:25
-msgid "Welcome to Mecalin"
+msgid "Welcome to Teclas"
 msgstr ""
 
 #: resources/ui/welcome_view.ui:26

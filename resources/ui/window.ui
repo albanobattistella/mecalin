@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="TeclasWindow" parent="AdwApplicationWindow">
-    <property name="title">Mecalin</property>
+    <property name="title">Teclas</property>
     <property name="width-request">1000</property>
     <property name="height-request">900</property>
     <property name="default-width">1000</property>

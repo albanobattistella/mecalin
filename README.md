@@ -1,4 +1,4 @@
-# Mecalin
+# Teclas
 
 A typing tutor application built with GTK4, Rust, and Adwaita.
 
@@ -6,7 +6,7 @@ Based on [Mecawin](https://archive.org/details/mecawin), a classic typing tutor 
 
 ## Installation
 
-Available on [Flathub](https://flathub.org/apps/io.github.nacho.mecalin)
+Available on [Flathub](https://flathub.org/apps/io.github.nacho.teclas)
 
 ### Building from Source
 
