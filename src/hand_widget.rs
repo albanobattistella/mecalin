@@ -51,7 +51,7 @@ mod imp {
             ));
 
             // Redraw when the finger-colors preference changes
-            let settings = gtk::gio::Settings::new("io.github.nacho.mecalin");
+            let settings = gtk::gio::Settings::new(crate::config::APPLICATION_ID);
             settings.connect_changed(
                 Some("use-finger-colors"),
                 glib::clone!(
@@ -166,7 +166,7 @@ mod imp {
             let colors = cached_colors.borrow();
             let colors = colors.as_ref().expect("Colors should be cached");
 
-            let settings = gtk::gio::Settings::new("io.github.nacho.mecalin");
+            let settings = gtk::gio::Settings::new(crate::config::APPLICATION_ID);
             let use_finger_colors = settings.boolean("use-finger-colors");
             let default_color = colors["hand-finger-default"];
             let default_border = colors["hand-finger-border"];

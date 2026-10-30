@@ -3,8 +3,6 @@ use gtk::subclass::prelude::*;
 use libadwaita as adw;
 use libadwaita::subclass::prelude::*;
 
-/// GSettings schema that stores the first-run `welcome-seen` flag.
-const SETTINGS_SCHEMA: &str = "io.github.nacho.mecalin";
 /// Key that records whether the welcome screen has been dismissed.
 const WELCOME_SEEN_KEY: &str = "welcome-seen";
 /// Navigation tag of the lessons overview page (kept beneath the lesson so
@@ -133,7 +131,7 @@ impl WelcomeView {
 
     /// Mark the welcome screen as seen and jump straight into the first lesson.
     fn finish_welcome(&self) {
-        let settings = gio::Settings::new(SETTINGS_SCHEMA);
+        let settings = gio::Settings::new(crate::config::APPLICATION_ID);
         if let Err(error) = settings.set_boolean(WELCOME_SEEN_KEY, true) {
             glib::g_warning!("mecalin", "Failed to set {WELCOME_SEEN_KEY}: {error}");
         }
@@ -166,7 +164,6 @@ mod tests {
 
     #[test]
     fn test_settings_constants() {
-        assert_eq!(SETTINGS_SCHEMA, "io.github.nacho.mecalin");
         assert_eq!(WELCOME_SEEN_KEY, "welcome-seen");
     }
 

@@ -121,7 +121,7 @@ impl LessonsView {
             return;
         };
 
-        let settings = gio::Settings::new("io.github.nacho.mecalin");
+        let settings = gio::Settings::new(crate::config::APPLICATION_ID);
         let current_lesson = settings.uint("current-lesson");
 
         // Clear any previously added rows.
@@ -181,7 +181,7 @@ impl LessonsView {
 
     /// Start a lesson from the list: select it and restart from the beginning.
     fn start_lesson(&self, lesson_id: u32) {
-        let settings = gio::Settings::new("io.github.nacho.mecalin");
+        let settings = gio::Settings::new(crate::config::APPLICATION_ID);
         settings.set_uint("current-lesson", lesson_id).ok();
         settings.set_uint("current-step", 0).ok();
         self.push_lesson();

@@ -23,6 +23,10 @@ fn initial_page_tag(welcome_seen: bool) -> &'static str {
     }
 }
 
+fn window_state_settings() -> gio::Settings {
+    gio::Settings::new(&format!("{}.state.window", crate::config::APPLICATION_ID))
+}
+
 mod imp {
     use super::*;
 
@@ -113,7 +117,7 @@ impl MecalinWindow {
     /// launch. Once the welcome screen has been seen, replace the stack with
     /// the lessons overview instead.
     fn setup_initial_page(&self) {
-        let settings = gio::Settings::new("io.github.nacho.mecalin");
+        let settings = gio::Settings::new(crate::config::APPLICATION_ID);
         let welcome_seen = settings.boolean("welcome-seen");
 
         if initial_page_tag(welcome_seen) == LESSONS_OVERVIEW_TAG {
@@ -141,7 +145,7 @@ impl MecalinWindow {
     }
 
     pub fn load_window_state(&self) {
-        let settings = gio::Settings::new("io.github.nacho.mecalin.state.window");
+        let settings = window_state_settings();
 
         let (width, height) = settings.get::<(i32, i32)>("size");
         self.set_default_size(width, height);
@@ -151,14 +155,14 @@ impl MecalinWindow {
         }
 
         self.connect_notify_local(Some("maximized"), move |window, _| {
-            let settings = gio::Settings::new("io.github.nacho.mecalin.state.window");
+            let settings = window_state_settings();
             settings
                 .set_boolean("maximized", window.is_maximized())
                 .unwrap();
         });
 
         self.connect_notify_local(Some("default-width"), move |window, _| {
-            let settings = gio::Settings::new("io.github.nacho.mecalin.state.window");
+            let settings = window_state_settings();
             if !window.is_maximized() {
                 let size = (window.default_width(), window.default_height());
                 settings.set("size", size).unwrap();
@@ -166,7 +170,7 @@ impl MecalinWindow {
         });
 
         self.connect_notify_local(Some("default-height"), move |window, _| {
-            let settings = gio::Settings::new("io.github.nacho.mecalin.state.window");
+            let settings = window_state_settings();
             if !window.is_maximized() {
                 let size = (window.default_width(), window.default_height());
                 settings.set("size", size).unwrap();

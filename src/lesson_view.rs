@@ -202,7 +202,7 @@ impl imp::LessonView {
 
     fn setup_settings(&self) {
         let obj = self.obj();
-        let settings = gio::Settings::new("io.github.nacho.mecalin");
+        let settings = gio::Settings::new(crate::config::APPLICATION_ID);
 
         // Bind widget visibility to settings
         settings
@@ -296,7 +296,7 @@ impl LessonView {
         let course = imp.course.borrow();
 
         if let Some(course) = course.as_ref() {
-            let settings = gio::Settings::new("io.github.nacho.mecalin");
+            let settings = gio::Settings::new(crate::config::APPLICATION_ID);
             let current_lesson = settings.uint("current-lesson");
             let current_step = settings.uint("current-step");
 
@@ -360,7 +360,7 @@ impl LessonView {
 
     fn set_lesson(&self, lesson: &Lesson) {
         // Save current lesson to settings
-        let settings = gio::Settings::new("io.github.nacho.mecalin");
+        let settings = gio::Settings::new(crate::config::APPLICATION_ID);
         settings.set_uint("current-lesson", lesson.id).unwrap();
 
         // apply_lesson is called again by the settings change handler, but it's

@@ -62,7 +62,7 @@ glib::wrapper! {
 impl MecalinApplication {
     pub fn new() -> Self {
         glib::Object::builder()
-            .property("application-id", "io.github.nacho.mecalin")
+            .property("application-id", crate::config::APPLICATION_ID)
             .build()
     }
 
