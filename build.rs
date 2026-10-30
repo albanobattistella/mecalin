@@ -26,6 +26,15 @@ fn generate_config() {
 
     fs::write(&dest_path, content).unwrap();
     println!("cargo:rerun-if-changed=src/config.rs.in");
+    for var in [
+        "VERSION",
+        "APPLICATION_ID",
+        "GETTEXT_PACKAGE",
+        "DATADIR",
+        "LOCALEDIR",
+    ] {
+        println!("cargo:rerun-if-env-changed={var}");
+    }
 }
 
 fn main() {
