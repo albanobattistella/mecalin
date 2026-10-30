@@ -6,7 +6,7 @@
     "sdk-extensions" : [
         "org.freedesktop.Sdk.Extension.rust-stable"
     ],
-    "command" : "mecalin",
+    "command" : "teclas",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
@@ -22,7 +22,7 @@
         ],
         "env" : {
             "RUST_BACKTRACE" : "1",
-            "RUST_LOG" : "mecalin=debug"
+            "RUST_LOG" : "teclas=debug"
         }
     },
     "cleanup" : [
@@ -38,7 +38,7 @@
     ],
     "modules" : [
         {
-            "name" : "mecalin",
+            "name" : "teclas",
             "builddir" : true,
             "buildsystem" : "meson",
             "run-tests" : true,

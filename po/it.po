@@ -1,11 +1,11 @@
 # ITALIAN TRANSLATION.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the mecalin package.
+# This file is distributed under the same license as the teclas package.
 # ALBANO BATTISTELLA <ALBANOBATTISTELLA@GMAIL.COM>, 2026.
 #  
 msgid ""
 msgstr ""
-"Project-Id-Version: mecalin\n"
+"Project-Id-Version: teclas\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-05 11:01+0200\n"
 "PO-Revision-Date: 2026-02-01 21:31+0200\n"

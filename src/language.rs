@@ -3,7 +3,7 @@ use gtk::prelude::*;
 use gtk::{gdk, glib::GString};
 
 /// Log domain for glib logging macros in this module.
-const G_LOG_DOMAIN: &str = "mecalin";
+const G_LOG_DOMAIN: &str = "teclas";
 
 /// A supported content/layout language.
 ///

@@ -119,7 +119,7 @@ impl CourseCompletionView {
         let parent_window = self.root().and_downcast::<gtk::Window>();
         launcher.launch(parent_window.as_ref(), gio::Cancellable::NONE, |result| {
             if let Err(error) = result {
-                glib::g_warning!("mecalin", "Failed to open Keypunch Flathub page: {error}");
+                glib::g_warning!("teclas", "Failed to open Keypunch Flathub page: {error}");
             }
         });
     }

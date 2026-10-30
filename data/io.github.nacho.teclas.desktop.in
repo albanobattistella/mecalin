@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Mecalin
 Comment=Learn how to type
-Exec=mecalin
+Exec=teclas
 Icon=io.github.nacho.teclas
 Terminal=false
 Type=Application

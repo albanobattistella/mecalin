@@ -17,7 +17,7 @@ cargo run
 # Production build
 meson setup builddir
 meson compile -C builddir
-./builddir/mecalin
+./builddir/teclas
 ```
 
 ## Dependencies

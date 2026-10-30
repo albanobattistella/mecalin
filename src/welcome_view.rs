@@ -133,7 +133,7 @@ impl WelcomeView {
     fn finish_welcome(&self) {
         let settings = gio::Settings::new(crate::config::APPLICATION_ID);
         if let Err(error) = settings.set_boolean(WELCOME_SEEN_KEY, true) {
-            glib::g_warning!("mecalin", "Failed to set {WELCOME_SEEN_KEY}: {error}");
+            glib::g_warning!("teclas", "Failed to set {WELCOME_SEEN_KEY}: {error}");
         }
 
         // Start the first lesson from its beginning.
