@@ -2,7 +2,7 @@
 Name=Mecalin
 Comment=Learn how to type
 Exec=mecalin
-Icon=io.github.nacho.mecalin
+Icon=io.github.nacho.teclas
 Terminal=false
 Type=Application
 Categories=Education;

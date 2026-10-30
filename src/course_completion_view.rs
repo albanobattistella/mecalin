@@ -13,13 +13,13 @@ const KEYPUNCH_APPSTREAM_URI: &str = "appstream:no.bragefuglseth.Keypunch";
 const KEYPUNCH_FLATHUB_URL: &str = "https://flathub.org/apps/no.bragefuglseth.Keypunch";
 /// Bundled fallback icon shown when the themed Keypunch icon is not installed.
 const KEYPUNCH_FALLBACK_ICON_RESOURCE: &str =
-    "/io/github/nacho/mecalin/icons/scalable/actions/keypunch-fallback-symbolic.svg";
+    "/io/github/nacho/teclas/icons/scalable/actions/keypunch-fallback-symbolic.svg";
 
 mod imp {
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate)]
-    #[template(resource = "/io/github/nacho/mecalin/ui/course_completion_view.ui")]
+    #[template(resource = "/io/github/nacho/teclas/ui/course_completion_view.ui")]
     pub struct CourseCompletionView {
         #[template_child]
         pub keypunch_row: TemplateChild<adw::ActionRow>,

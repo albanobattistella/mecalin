@@ -1,5 +1,5 @@
 {
-    "id" : "io.github.nacho.mecalin",
+    "id" : "io.github.nacho.teclas",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "51",
     "sdk" : "org.gnome.Sdk",

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.nacho.mecalin</id>
+  <id>io.github.nacho.teclas</id>
+  <provides>
+    <id>io.github.nacho.mecalin</id>
+  </provides>
+  <replaces>
+    <id>io.github.nacho.mecalin</id>
+  </replaces>
   
   <name>Mecalin</name>
   
@@ -85,7 +91,7 @@
     </p>
   </description>
   
-  <launchable type="desktop-id">io.github.nacho.mecalin.desktop</launchable>
+  <launchable type="desktop-id">io.github.nacho.teclas.desktop</launchable>
   
   <url type="homepage">https://github.com/nacho/mecalin</url>
   <url type="vcs-browser">https://github.com/nacho/mecalin</url>

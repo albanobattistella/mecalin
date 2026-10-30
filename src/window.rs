@@ -31,7 +31,7 @@ mod imp {
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate)]
-    #[template(resource = "/io/github/nacho/mecalin/ui/window.ui")]
+    #[template(resource = "/io/github/nacho/teclas/ui/window.ui")]
     pub struct MecalinWindow {
         #[template_child]
         pub navigation_view: TemplateChild<adw::NavigationView>,

@@ -26,7 +26,7 @@ mod imp {
         fn startup(&self) {
             self.parent_startup();
             let app = self.obj();
-            app.set_resource_base_path(Some("/io/github/nacho/mecalin"));
+            app.set_resource_base_path(Some("/io/github/nacho/teclas"));
 
             app.setup_actions();
 
@@ -34,7 +34,7 @@ mod imp {
             app.set_accels_for_action("window.close", &["<Ctrl>W"]);
 
             let provider = gtk::CssProvider::new();
-            provider.load_from_resource("/io/github/nacho/mecalin/style.css");
+            provider.load_from_resource("/io/github/nacho/teclas/style.css");
             gtk::style_context_add_provider_for_display(
                 &gtk::gdk::Display::default().expect("Could not connect to a display"),
                 &provider,

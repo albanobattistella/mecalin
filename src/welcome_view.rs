@@ -25,7 +25,7 @@ mod imp {
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate)]
-    #[template(resource = "/io/github/nacho/mecalin/ui/welcome_view.ui")]
+    #[template(resource = "/io/github/nacho/teclas/ui/welcome_view.ui")]
     pub struct WelcomeView {
         #[template_child]
         pub carousel: TemplateChild<adw::Carousel>,

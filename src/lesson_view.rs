@@ -17,7 +17,7 @@ mod imp {
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate, glib::Properties)]
-    #[template(resource = "/io/github/nacho/mecalin/ui/lesson_view.ui")]
+    #[template(resource = "/io/github/nacho/teclas/ui/lesson_view.ui")]
     #[properties(wrapper_type = super::LessonView)]
     pub struct LessonView {
         #[template_child]

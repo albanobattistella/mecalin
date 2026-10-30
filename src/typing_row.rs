@@ -9,7 +9,7 @@ mod imp {
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate)]
-    #[template(resource = "/io/github/nacho/mecalin/ui/typing_row.ui")]
+    #[template(resource = "/io/github/nacho/teclas/ui/typing_row.ui")]
     pub struct TypingRow {
         #[template_child]
         pub target_label: TemplateChild<gtk::Label>,
