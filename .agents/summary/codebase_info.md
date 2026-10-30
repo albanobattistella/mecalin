@@ -3,12 +3,12 @@
 
 ## Project Identity
 
-- **Name**: Mecalin
-- **Application ID**: `io.github.nacho.mecalin`
+- **Name**: Teclas
+- **Application ID**: `io.github.nacho.teclas`
 - **Version**: 1.0.2
 - **License**: GPL-3.0-or-later
 - **Category**: Education (Typing Tutor)
-- **Distribution**: [Flathub](https://flathub.org/apps/io.github.nacho.mecalin)
+- **Distribution**: [Flathub](https://flathub.org/apps/io.github.nacho.teclas)
 - **Heritage**: Based on [Mecawin](https://archive.org/details/mecawin), a classic Windows typing tutor
 
 ## Technology Stack
@@ -20,7 +20,7 @@
 | Design System | libadwaita | ≥ 1.5 |
 | Build (dev) | Cargo | stable toolchain |
 | Build (prod) | Meson | ≥ 0.59.0 |
-| Packaging | Flatpak | GNOME Platform 46 |
+| Packaging | Flatpak | GNOME Platform 51 |
 | i18n | gettext | via `gettext-rs` crate |
 | CI | GitHub Actions | ubuntu-latest |
 

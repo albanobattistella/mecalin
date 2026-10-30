@@ -6,16 +6,16 @@
 ```mermaid
 sequenceDiagram
     participant main as main()
-    participant app as MecalinApplication
-    participant window as MecalinWindow
+    participant app as TeclasApplication
+    participant window as TeclasWindow
 
     main->>main: Set locale (gettext)
     main->>main: Register GResource bundle
-    main->>app: MecalinApplication::new()
+    main->>app: TeclasApplication::new()
     app->>app: startup(): Set resource base path
     app->>app: Load CSS provider
     app->>app: Set keyboard shortcuts
-    app->>window: activate(): MecalinWindow::new()
+    app->>window: activate(): TeclasWindow::new()
     window->>window: Load window state from GSettings
     window->>window: present()
 ```
@@ -25,7 +25,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant user as User
-    participant window as MecalinWindow
+    participant window as TeclasWindow
     participant lesson as LessonView
     participant typing as TypingRow
     participant keyboard as KeyboardWidget
@@ -207,8 +207,8 @@ graph LR
 ## Release Process
 
 1. Update version in `Cargo.toml` and `meson.build`
-2. Add release entry in `data/io.github.nacho.mecalin.metainfo.xml`
-3. Run `cargo fmt` and `cargo update -p mecalin`
+2. Add release entry in `data/io.github.nacho.teclas.metainfo.xml`
+3. Run `cargo fmt` and `cargo update -p teclas`
 4. Commit as "Release X.Y.Z"
 5. Tag `vX.Y.Z`
 6. Push changes and tags

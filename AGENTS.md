@@ -4,7 +4,7 @@
 ## Table of Contents
 <!-- metadata: toc -->
 
-- [Project Overview](#project-overview) — What Mecalin is and its tech stack
+- [Project Overview](#project-overview) — What Teclas is and its tech stack
 - [Directory Map](#directory-map) — Where to find things in the repo
 - [Architecture](#architecture) — GTK4 subclassing pattern, navigation, state management
 - [Key Entry Points](#key-entry-points) — Starting points for common tasks
@@ -16,7 +16,7 @@
 ## Project Overview
 <!-- metadata: scope=identity -->
 
-Mecalin is a GTK4/Rust/Adwaita typing tutor for GNOME, inspired by [Mecawin](https://archive.org/details/mecawin). It provides structured typing lessons with visual aids (on-screen keyboard, hand position guide). Distributed via [Flathub](https://flathub.org/apps/io.github.nacho.mecalin).
+Teclas is a GTK4/Rust/Adwaita typing tutor for GNOME, inspired by [Mecawin](https://archive.org/details/mecawin). It provides structured typing lessons with visual aids (on-screen keyboard, hand position guide). Distributed via [Flathub](https://flathub.org/apps/io.github.nacho.teclas).
 
 **Stack**: Rust (edition 2024), GTK4 ≥ 4.18, libadwaita ≥ 1.7, Meson (production) / Cargo (development), Flatpak (GNOME Platform 51).
 
@@ -26,8 +26,8 @@ Mecalin is a GTK4/Rust/Adwaita typing tutor for GNOME, inspired by [Mecawin](htt
 ```
 src/                        # Rust source
 ├── main.rs                 # Entry point → application.rs
-├── application.rs          # MecalinApplication (startup, CSS, shortcuts, app actions)
-├── window.rs               # MecalinWindow (NavigationView hub)
+├── application.rs          # TeclasApplication (startup, CSS, shortcuts, app actions)
+├── window.rs               # TeclasWindow (NavigationView hub)
 ├── lesson_view.rs          # Structured lessons (most complex view)
 ├── course.rs               # Lesson data model, loads JSON by locale
 ├── keyboard_widget.rs      # Visual keyboard (largest file, custom rendering)
@@ -46,9 +46,9 @@ resources/
 data/
 ├── lessons/                # Lesson JSON files (de, es, fr, gl, it, pl, pt, pt_br, us)
 ├── keyboard_layouts/       # Keyboard layout JSONs
-├── io.github.nacho.mecalin.gschema.xml  # GSettings schema
-├── io.github.nacho.mecalin.metainfo.xml # AppStream metadata + release history
-└── io.github.nacho.mecalin.desktop.in   # Desktop entry
+├── io.github.nacho.teclas.gschema.xml  # GSettings schema
+├── io.github.nacho.teclas.metainfo.xml # AppStream metadata + release history
+└── io.github.nacho.teclas.desktop.in   # Desktop entry
 po/                         # Translations: es, fr, gl, it, pl, pt
 build.rs                    # Config generation + GResource compilation
 ```
@@ -58,9 +58,9 @@ build.rs                    # Config generation + GResource compilation
 
 **Pattern**: Every UI component is a GObject subclass with a private `imp` module, `#[derive(CompositeTemplate)]` binding to an XML template, and a public wrapper via `glib::wrapper!`. Initialization happens in `ObjectImpl::constructed()`.
 
-**Navigation**: `MecalinWindow` contains an `adw::NavigationView` that opens directly on the Lessons page. Preferences and About are `adw::NavigationPage`s pushed by tag (`preferences`, `about`) from the primary menu.
+**Navigation**: `TeclasWindow` contains an `adw::NavigationView` that opens directly on the Lessons page. Preferences and About are `adw::NavigationPage`s pushed by tag (`preferences`, `about`) from the primary menu.
 
-**State**: GSettings (`io.github.nacho.mecalin`) persists lesson progress and preferences. Window state uses a separate schema (`io.github.nacho.mecalin.state.window`). Runtime state lives in `Cell`/`RefCell` fields.
+**State**: GSettings (`io.github.nacho.teclas`) persists lesson progress and preferences. Window state uses a separate schema (`io.github.nacho.teclas.state.window`). Runtime state lives in `Cell`/`RefCell` fields.
 
 **Resources**: UI templates, CSS, and icons are compiled into the binary via GResource. Lesson JSONs and word lists are embedded via `include_str!` / `include_dir!` at compile time.
 
@@ -76,7 +76,7 @@ build.rs                    # Config generation + GResource compilation
 | Change keyboard rendering | `src/keyboard_widget.rs`, `data/keyboard_layouts/*.json` |
 | Add a new language | `src/utils.rs` (`Language` enum variant + `as_code`/`from_code` + `language_from_locale`/`language_from_layout_name` mapping), `src/course.rs` + `src/keyboard_widget.rs` (match arms), `po/LINGUAS`, `data/lessons/`, `data/keyboard_layouts/` |
 | Change visual styling | `resources/style.css` (semantic color vars for keyboard, hand, finger colors) |
-| Update settings | `data/io.github.nacho.mecalin.gschema.xml` + consuming component |
+| Update settings | `data/io.github.nacho.teclas.gschema.xml` + consuming component |
 
 ## Non-Obvious Patterns
 <!-- metadata: scope=gotchas -->
@@ -91,8 +91,7 @@ build.rs                    # Config generation + GResource compilation
 
 - **Pre-commit hook** (`.git/hooks/pre-commit`): Runs `cargo fmt --check`; if formatting fails, runs `cargo fmt` and aborts the commit.
 - **CI** (`.github/workflows/ci.yml`): On push/PR to `main` — `cargo fmt --check` → `cargo clippy -- -D warnings` → `cargo build` → `cargo test` → `meson setup + compile`.
-- **Flatpak dev manifest** (`io.github.nacho.mecalin-devel.yml`): Uses GNOME Platform 46, `org.freedesktop.Sdk.Extension.rust-stable`.
-- **GSettings compiled schema** (`data/gschemas.compiled`): Pre-compiled schema checked into the repo for `cargo run` development (avoids needing `glib-compile-schemas` during dev).
+- **Flatpak dev manifest** (`build-aux/io.github.nacho.teclas.Devel.json`): Uses GNOME Platform 51, `org.freedesktop.Sdk.Extension.rust-stable`.
 
 ## Detailed Documentation
 <!-- metadata: scope=reference -->
@@ -122,13 +121,13 @@ Full documentation is in `.agents/summary/`. Start with `index.md` for a guided 
 ### Release Process
 
 1. Update version in `Cargo.toml` and `meson.build`
-2. Add release entry in `data/io.github.nacho.mecalin.metainfo.xml` with:
+2. Add release entry in `data/io.github.nacho.teclas.metainfo.xml` with:
    - New version number
    - Release date (YYYY-MM-DD format, use current date)
    - List of changes since last release
 3. Generate changelog: `git log vPREVIOUS..HEAD --oneline --no-merges`
 4. Organize changes into categories: **Added**, **Improved**, **Fixed**, **Updated**
-5. Run `cargo fmt` and `cargo update -p mecalin`
+5. Run `cargo fmt` and `cargo update -p teclas`
 6. Commit as "Release X.Y.Z"
 7. Tag `vX.Y.Z`
 8. Push changes and tags: `git push && git push --tags`
@@ -142,7 +141,7 @@ Full documentation is in `.agents/summary/`. Start with `index.md` for a guided 
 
 ### Icon Design
 
-- Application icon: `data/icons/io.github.nacho.mecalin.svg`
+- Application icon: `data/icons/io.github.nacho.teclas.svg`
 - **MUST follow GNOME HIG palette**: https://developer.gnome.org/hig/reference/palette.html
 - Use only colors from the official GNOME palette (Light 1-5, Dark 1-5, Blue, Green, Yellow, Orange, Red, Purple, Brown)
 
@@ -161,6 +160,13 @@ Full documentation is in `.agents/summary/`. Start with `index.md` for a guided 
 - Keep code concise and maintainable
 - Always remind about running `cargo fmt` before commits
 
+### Rename from Mecalin (3.0.0)
+
+- The app was renamed from Mecalin (`io.github.nacho.mecalin`) to Teclas (`io.github.nacho.teclas`)
+  in 3.0.0. The metainfo `<provides>`/`<replaces>` entries for the old ID are required by Flathub
+  and must be kept. Older `<release>` notes intentionally still say Mecalin.
+- GSettings were not migrated from the old schema; users start fresh.
+
 ### GNOME Circle Review Notes (iteration 1)
 
 - **No Preferences dialog**: `src/preferences_dialog.rs` was removed. The `use-finger-colors`
@@ -170,11 +176,11 @@ Full documentation is in `.agents/summary/`. Start with `index.md` for a guided 
   `Ctrl+,` accelerator.
 - **Hand/keyboard always visible**: the `show-hand-widget` and `show-keyboard-widget` GSettings
   keys and their bindings in `lesson_view.rs` are intentionally KEPT (both default `true`) so they
-  remain adjustable via the command line (`gsettings set io.github.nacho.mecalin show-hand-widget
+  remain adjustable via the command line (`gsettings set io.github.nacho.teclas show-hand-widget
   false`), but there is no in-app UI for them.
 - **Desktop-only**: `metainfo.xml` declares `<requires><display_length compare="ge">1000</…>` and
   `<recommends><control>keyboard/pointing</…>`; the window has a 1000x900 minimum size.
-- **Devel Flatpak manifest**: `build-aux/io.github.nacho.mecalin.Devel.json` builds the local tree
+- **Devel Flatpak manifest**: `build-aux/io.github.nacho.teclas.Devel.json` builds the local tree
   (`type: dir, path: ..`) for GNOME Builder, modeled on Keypunch's convention.
 - **Known follow-up**: lesson 7/8 practice `text` bodies still use ISO/Spanish-layout shifted
   symbols in several languages and need a layout-correct rewrite (verified per keyboard layout).
@@ -188,5 +194,5 @@ Full documentation is in `.agents/summary/`. Start with `index.md` for a guided 
   pair (Spanish layout + Galician locale → `es` keyboard, `gl` lessons). Live updates are wired
   via `notify::active-layout-index`/`layout-names` on the seat keyboard device in the
   `KeyboardWidget` and `LessonsView` `realize` overrides. `resolve_languages_for_display` logs
-  the raw layout name (`glib::debug!`, domain `mecalin`) to help tune the keyword table against
+  the raw layout name (`glib::debug!`, domain `teclas`) to help tune the keyword table against
   real-world strings. Requires GTK ≥ 4.18.
