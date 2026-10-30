@@ -56,7 +56,7 @@ msgstr "Lektion starten"
 
 #: resources/ui/lessons_view.ui:6
 msgid "_About Teclas"
-msgstr "Über _Mecalin"
+msgstr "Über _Teclas"
 
 #: resources/ui/lessons_view.ui:13
 msgid "Lessons"
