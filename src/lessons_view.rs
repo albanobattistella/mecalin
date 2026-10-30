@@ -38,7 +38,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for LessonsView {
-        const NAME: &'static str = "MecalinLessonsView";
+        const NAME: &'static str = "TeclasLessonsView";
         type Type = super::LessonsView;
         type ParentType = adw::NavigationPage;
 

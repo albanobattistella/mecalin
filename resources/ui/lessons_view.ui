@@ -8,7 +8,7 @@
       </item>
     </section>
   </menu>
-  <template class="MecalinLessonsView" parent="AdwNavigationPage">
+  <template class="TeclasLessonsView" parent="AdwNavigationPage">
     <property name="tag">lessons-overview</property>
     <property name="title" translatable="yes">Lessons</property>
     <property name="child">

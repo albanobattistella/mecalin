@@ -11,7 +11,7 @@ const G_LOG_DOMAIN: &str = "teclas";
 /// keyboard-layout JSON are selected by matching on the variant. Registered as
 /// a glib enum type so it can be passed directly as a GObject property.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, glib::Enum)]
-#[enum_type(name = "MecalinLanguage")]
+#[enum_type(name = "TeclasLanguage")]
 pub enum Language {
     #[default]
     Us,

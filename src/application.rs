@@ -6,23 +6,23 @@ use libadwaita as adw;
 use libadwaita::prelude::*;
 use libadwaita::subclass::prelude::*;
 
-use crate::window::MecalinWindow;
+use crate::window::TeclasWindow;
 
 mod imp {
     use super::*;
 
     #[derive(Default)]
-    pub struct MecalinApplication;
+    pub struct TeclasApplication;
 
     #[glib::object_subclass]
-    impl ObjectSubclass for MecalinApplication {
-        const NAME: &'static str = "MecalinApplication";
-        type Type = super::MecalinApplication;
+    impl ObjectSubclass for TeclasApplication {
+        const NAME: &'static str = "TeclasApplication";
+        type Type = super::TeclasApplication;
         type ParentType = adw::Application;
     }
 
-    impl ObjectImpl for MecalinApplication {}
-    impl ApplicationImpl for MecalinApplication {
+    impl ObjectImpl for TeclasApplication {}
+    impl ApplicationImpl for TeclasApplication {
         fn startup(&self) {
             self.parent_startup();
             let app = self.obj();
@@ -44,22 +44,22 @@ mod imp {
 
         fn activate(&self) {
             let app = self.obj();
-            let window = MecalinWindow::new(app.upcast_ref());
+            let window = TeclasWindow::new(app.upcast_ref());
             window.load_window_state();
             window.present();
         }
     }
-    impl GtkApplicationImpl for MecalinApplication {}
-    impl AdwApplicationImpl for MecalinApplication {}
+    impl GtkApplicationImpl for TeclasApplication {}
+    impl AdwApplicationImpl for TeclasApplication {}
 }
 
 glib::wrapper! {
-    pub struct MecalinApplication(ObjectSubclass<imp::MecalinApplication>)
+    pub struct TeclasApplication(ObjectSubclass<imp::TeclasApplication>)
         @extends adw::Application, gtk::Application, gio::Application,
         @implements gio::ActionGroup, gio::ActionMap;
 }
 
-impl MecalinApplication {
+impl TeclasApplication {
     pub fn new() -> Self {
         glib::Object::builder()
             .property("application-id", crate::config::APPLICATION_ID)

@@ -82,7 +82,7 @@
                           <class name="boxed-list"/>
                         </style>
                         <child>
-                          <object class="MecalinTypingRow" id="typing_row">
+                          <object class="TeclasTypingRow" id="typing_row">
                             <property name="halign">center</property>
                             <property name="width-request">400</property>
                           </object>
@@ -101,13 +101,13 @@
                 <property name="vexpand">true</property>
                 <property name="spacing">12</property>
                 <child>
-                  <object class="MecalinHandWidget" id="hand_widget">
+                  <object class="TeclasHandWidget" id="hand_widget">
                     <property name="halign">center</property>
                     <property name="margin-bottom">24</property>
                   </object>
                 </child>
                 <child>
-                  <object class="MecalinKeyboardWidget" id="keyboard_widget"/>
+                  <object class="TeclasKeyboardWidget" id="keyboard_widget"/>
                 </child>
               </object>
             </child>

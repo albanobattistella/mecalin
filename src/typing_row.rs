@@ -22,7 +22,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for TypingRow {
-        const NAME: &'static str = "MecalinTypingRow";
+        const NAME: &'static str = "TeclasTypingRow";
         type Type = super::TypingRow;
         type ParentType = adw::PreferencesRow;
 

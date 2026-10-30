@@ -32,7 +32,7 @@ mod imp {
 
     #[derive(Default, gtk::CompositeTemplate)]
     #[template(resource = "/io/github/nacho/teclas/ui/window.ui")]
-    pub struct MecalinWindow {
+    pub struct TeclasWindow {
         #[template_child]
         pub navigation_view: TemplateChild<adw::NavigationView>,
         #[template_child(id = "lessons_view_widget")]
@@ -42,9 +42,9 @@ mod imp {
     }
 
     #[glib::object_subclass]
-    impl ObjectSubclass for MecalinWindow {
-        const NAME: &'static str = "MecalinWindow";
-        type Type = super::MecalinWindow;
+    impl ObjectSubclass for TeclasWindow {
+        const NAME: &'static str = "TeclasWindow";
+        type Type = super::TeclasWindow;
         type ParentType = adw::ApplicationWindow;
 
         fn class_init(klass: &mut Self::Class) {
@@ -60,13 +60,13 @@ mod imp {
         }
     }
 
-    impl ObjectImpl for MecalinWindow {
+    impl ObjectImpl for TeclasWindow {
         fn constructed(&self) {
             self.parent_constructed();
             self.obj().setup_initial_page();
         }
     }
-    impl WidgetImpl for MecalinWindow {
+    impl WidgetImpl for TeclasWindow {
         fn realize(&self) {
             self.parent_realize();
             let obj = self.obj();
@@ -95,19 +95,19 @@ mod imp {
             }
         }
     }
-    impl WindowImpl for MecalinWindow {}
-    impl ApplicationWindowImpl for MecalinWindow {}
-    impl AdwApplicationWindowImpl for MecalinWindow {}
+    impl WindowImpl for TeclasWindow {}
+    impl ApplicationWindowImpl for TeclasWindow {}
+    impl AdwApplicationWindowImpl for TeclasWindow {}
 }
 
 glib::wrapper! {
-    pub struct MecalinWindow(ObjectSubclass<imp::MecalinWindow>)
+    pub struct TeclasWindow(ObjectSubclass<imp::TeclasWindow>)
         @extends adw::ApplicationWindow, gtk::ApplicationWindow, gtk::Window, gtk::Widget,
         @implements gio::ActionGroup, gio::ActionMap, gtk::Accessible, gtk::Buildable,
                     gtk::ConstraintTarget, gtk::Native, gtk::Root, gtk::ShortcutManager;
 }
 
-impl MecalinWindow {
+impl TeclasWindow {
     pub fn new(app: &adw::Application) -> Self {
         glib::Object::builder().property("application", app).build()
     }

@@ -596,7 +596,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for KeyboardWidget {
-        const NAME: &'static str = "MecalinKeyboardWidget";
+        const NAME: &'static str = "TeclasKeyboardWidget";
         type Type = super::KeyboardWidget;
         type ParentType = gtk::Widget;
     }

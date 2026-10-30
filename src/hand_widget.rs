@@ -20,7 +20,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for HandWidget {
-        const NAME: &'static str = "MecalinHandWidget";
+        const NAME: &'static str = "TeclasHandWidget";
         type Type = super::HandWidget;
         type ParentType = gtk::Widget;
     }
