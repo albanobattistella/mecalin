@@ -7,6 +7,8 @@
 @define-color keyboard-key-current-text-color @accent_fg_color;
 @define-color keyboard-modifier-color mix(@card_bg_color, @window_bg_color, 0.5);
 @define-color keyboard-modifier-text-color @window_fg_color;
+@define-color keyboard-modifier-current-color mix(@accent_bg_color, @view_bg_color, 0.5);
+@define-color keyboard-modifier-current-text-color @view_fg_color;
 @define-color keyboard-border-color @borders;
 
 /* Hand colors */
@@ -15,6 +17,7 @@
 @define-color hand-finger-default-color @view_bg_color;
 @define-color hand-finger-border-color @borders;
 @define-color hand-finger-current-color @accent_bg_color;
+@define-color hand-finger-modifier-color mix(@accent_bg_color, @view_bg_color, 0.5);
 
 /* Finger colors - GNOME HIG palette, softened via OKLab */
 @define-color finger-left-pinky-color color-mix(in srgb, oklab(from @red_3 0.6 a b) 25%, @view_bg_color);

@@ -14,6 +14,7 @@ mod imp {
     #[derive(Default)]
     pub struct HandWidget {
         pub current_finger: RefCell<Option<Finger>>,
+        pub modifier_finger: RefCell<Option<Finger>>,
         pub cached_colors: RefCell<Option<HashMap<String, gdk::RGBA>>>,
         pub settings: RefCell<Option<gtk::gio::Settings>>,
     }
@@ -85,7 +86,13 @@ mod imp {
                 self.cache_colors();
             }
 
-            Self::draw_hand(snapshot, &widget, &self.current_finger, &self.cached_colors);
+            Self::draw_hand(
+                snapshot,
+                &widget,
+                &self.current_finger,
+                &self.modifier_finger,
+                &self.cached_colors,
+            );
         }
 
         fn measure(&self, orientation: gtk::Orientation, _for_size: i32) -> (i32, i32, i32, i32) {
@@ -123,6 +130,10 @@ mod imp {
                 "hand-finger-current".to_string(),
                 lookup("hand-finger-current-color"),
             );
+            colors.insert(
+                "hand-finger-modifier".to_string(),
+                lookup("hand-finger-modifier-color"),
+            );
             colors.insert("hand-palm".to_string(), lookup("hand-palm-color"));
             colors.insert(
                 "hand-palm-border".to_string(),
@@ -159,9 +170,11 @@ mod imp {
             snapshot: &gtk::Snapshot,
             _widget: &super::HandWidget,
             current_finger: &RefCell<Option<Finger>>,
+            modifier_finger: &RefCell<Option<Finger>>,
             cached_colors: &RefCell<Option<HashMap<String, gdk::RGBA>>>,
         ) {
             let current = current_finger.borrow();
+            let modifier = *modifier_finger.borrow();
 
             let colors = cached_colors.borrow();
             let colors = colors.as_ref().expect("Colors should be cached");
@@ -170,6 +183,8 @@ mod imp {
             let use_finger_colors = settings.boolean("use-finger-colors");
             let default_color = colors["hand-finger-default"];
             let default_border = colors["hand-finger-border"];
+            let modifier_fill = colors["hand-finger-modifier"];
+            let modifier_border = colors["hand-finger-current"];
 
             // Finger layout: (name, x, y, width, height)
             let fingers = [
@@ -235,6 +250,8 @@ mod imp {
                         .copied()
                         .unwrap_or(default_color);
                     (c, c)
+                } else if modifier == Some(finger_enum) {
+                    (modifier_fill, modifier_border)
                 } else if use_finger_colors {
                     let class_name = Self::get_finger_css_class(&finger_enum);
                     let c = colors.get(&class_name).copied().unwrap_or(default_color);
@@ -266,6 +283,8 @@ mod imp {
                         .copied()
                         .unwrap_or(default_color);
                     (c, c)
+                } else if modifier == Some(thumb_enum) {
+                    (modifier_fill, modifier_border)
                 } else if use_finger_colors {
                     let class_name = Self::get_finger_css_class(&thumb_enum);
                     let c = colors.get(&class_name).copied().unwrap_or(default_color);
@@ -398,6 +417,11 @@ impl HandWidget {
 
     pub fn set_current_finger(&self, finger: Option<Finger>) {
         *self.imp().current_finger.borrow_mut() = finger;
+        self.queue_draw();
+    }
+
+    pub fn set_modifier_finger(&self, finger: Option<Finger>) {
+        *self.imp().modifier_finger.borrow_mut() = finger;
         self.queue_draw();
     }
 }

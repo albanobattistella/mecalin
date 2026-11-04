@@ -112,47 +112,19 @@ pub struct KeyInfo {
     pub finger: Finger,
 }
 
-impl KeyInfo {
-    /// Check if this key should be highlighted for the given character.
-    /// Prioritizes base keys over altgr variants to avoid multiple highlights.
-    pub fn matches_char(&self, ch: char, layout: &KeyboardLayout) -> bool {
-        if ch == ' ' {
-            return false;
-        }
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum KeyLevel {
+    Base,
+    Shift,
+    AltGr,
+}
 
-        let ch_lower = ch.to_lowercase().next().unwrap();
-        let base_char = self.base.chars().next().unwrap_or(' ');
-        let base_lower = base_char.to_lowercase().next().unwrap();
-
-        // Check base (case-insensitive)
-        if ch_lower == base_lower {
-            return true;
-        }
-
-        // Check shift (exact match)
-        if self
-            .shift
-            .as_ref()
-            .is_some_and(|s| s.chars().next().unwrap_or(' ') == ch)
-        {
-            return true;
-        }
-
-        // Only check altgr if character doesn't exist as base in any key
-        if self
-            .altgr
-            .as_ref()
-            .is_some_and(|a| a.chars().next().unwrap_or(' ') == ch)
-        {
-            let exists_as_base = layout.keys.iter().flatten().any(|k| {
-                let k_char = k.base.chars().next().unwrap_or(' ');
-                ch_lower == k_char.to_lowercase().next().unwrap()
-            });
-            return !exists_as_base;
-        }
-
-        false
-    }
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ResolvedKey {
+    pub row: usize,
+    pub col: usize,
+    pub finger: Finger,
+    pub level: KeyLevel,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -199,82 +171,83 @@ impl KeyboardLayout {
     }
 
     pub fn get_finger_for_char(&self, ch: char) -> Option<Finger> {
-        let ch_lower = ch.to_lowercase().next().unwrap();
-
-        // Check space key
         if ch == ' ' {
             return Some(self.space.finger);
         }
+        self.resolve_char(ch).map(|r| r.finger)
+    }
 
-        // Check all keys in the layout
-        for row in &self.keys {
-            for key_info in row {
-                let key_char = key_info.base.chars().next().unwrap_or(' ');
-                let base_lower = key_char.to_lowercase().next().unwrap();
+    pub fn contains_character(&self, ch: char) -> bool {
+        ch == ' ' || self.resolve_char(ch).is_some()
+    }
 
-                // Check base (lowercase comparison)
-                if ch_lower == base_lower {
-                    return Some(key_info.finger);
-                }
-
-                // Check shift (exact match)
-                if let Some(shift) = &key_info.shift
-                    && shift.chars().next().unwrap_or(' ') == ch
-                {
-                    return Some(key_info.finger);
-                }
-
-                // Check altgr (exact match)
-                if let Some(altgr) = &key_info.altgr
-                    && altgr.chars().next().unwrap_or(' ') == ch
-                {
-                    return Some(key_info.finger);
-                }
-            }
+    /// Find the key and level that produce `ch`. Each level is searched
+    /// across the whole layout before the next one, so a character that is
+    /// on a base level never resolves to another key's Shift or AltGr level.
+    pub fn resolve_char(&self, ch: char) -> Option<ResolvedKey> {
+        if ch == ' ' {
+            return None;
         }
 
-        None
+        let find = |level: KeyLevel, matches: &dyn Fn(&KeyInfo) -> bool| {
+            self.keys.iter().enumerate().find_map(|(row, keys)| {
+                keys.iter().position(matches).map(|col| ResolvedKey {
+                    row,
+                    col,
+                    finger: keys[col].finger,
+                    level,
+                })
+            })
+        };
+
+        find(KeyLevel::Base, &|k| first_char(Some(&k.base)) == Some(ch))
+            .or_else(|| {
+                find(KeyLevel::Shift, &|k| {
+                    first_char(k.shift.as_deref()) == Some(ch)
+                })
+            })
+            .or_else(|| {
+                find(KeyLevel::Shift, &|k| {
+                    first_char(Some(&k.base))
+                        .is_some_and(|b| b.is_alphabetic() && b.to_uppercase().eq([ch]))
+                })
+            })
+            .or_else(|| {
+                find(KeyLevel::AltGr, &|k| {
+                    first_char(k.altgr.as_deref()) == Some(ch)
+                })
+            })
+    }
+
+    /// Modifier keys (by `modifiers` name) to hold for `target`. Shift is
+    /// pressed with the hand opposite to the one typing the key.
+    pub fn modifier_keys_for(&self, target: &ResolvedKey) -> Vec<&'static str> {
+        let names: &[&'static str] = match target.level {
+            KeyLevel::Base => &[],
+            KeyLevel::AltGr => &["alt_right"],
+            KeyLevel::Shift => match target.finger.hand() {
+                Some("left") => &["shift_right"],
+                Some("right") => &["shift_left"],
+                _ => &["shift_left", "shift_right"],
+            },
+        };
+        names
+            .iter()
+            .copied()
+            .filter(|name| self.modifiers.contains_key(*name))
+            .collect()
+    }
+
+    pub fn modifier_finger_for(&self, target: &ResolvedKey) -> Option<Finger> {
+        self.modifier_keys_for(target)
+            .first()
+            .and_then(|name| self.modifiers.get(*name))
+            .map(|m| m.finger)
     }
 }
 
-impl KeyboardLayout {
-    pub fn contains_character(&self, ch: char) -> bool {
-        let ch_lower = ch.to_lowercase().next().unwrap();
-
-        // Check space key
-        if ch == ' ' {
-            return true;
-        }
-
-        // Check all keys in the layout
-        for row in &self.keys {
-            for key_info in row {
-                let key_char = key_info.base.chars().next().unwrap_or(' ');
-                let base_lower = key_char.to_lowercase().next().unwrap();
-
-                // Check base (lowercase comparison)
-                if ch_lower == base_lower {
-                    return true;
-                }
-
-                // Check shift (exact match)
-                if let Some(shift) = &key_info.shift
-                    && shift.chars().next().unwrap_or(' ') == ch
-                {
-                    return true;
-                }
-
-                // Check altgr (exact match)
-                if let Some(altgr) = &key_info.altgr
-                    && altgr.chars().next().unwrap_or(' ') == ch
-                {
-                    return true;
-                }
-            }
-        }
-
-        false
-    }
+fn first_char(s: Option<&str>) -> Option<char> {
+    s.and_then(|s| s.chars().next())
 }
 
 impl Default for KeyboardLayout {
@@ -508,58 +481,143 @@ mod tests {
         }
     }
 
-    #[test]
-    fn test_matches_char_base_priority() {
-        let layout = create_test_layout();
-        let apostrophe_key = &layout.keys[0][0];
-        let nine_key = &layout.keys[0][1];
-        let zero_key = &layout.keys[0][2];
+    fn resolve(layout: &KeyboardLayout, ch: char) -> (usize, usize, KeyLevel) {
+        let r = layout
+            .resolve_char(ch)
+            .unwrap_or_else(|| panic!("{ch:?} not resolved"));
+        (r.row, r.col, r.level)
+    }
 
-        // Only the apostrophe key should match, not the altgr variants
-        assert!(apostrophe_key.matches_char('\'', &layout));
-        assert!(!nine_key.matches_char('\'', &layout));
-        assert!(!zero_key.matches_char('\'', &layout));
+    fn modifier_keys(layout: &KeyboardLayout, ch: char) -> Vec<&'static str> {
+        layout.modifier_keys_for(&layout.resolve_char(ch).unwrap())
     }
 
     #[test]
-    fn test_matches_char_shift() {
+    fn test_resolve_char_base_beats_altgr() {
         let layout = create_test_layout();
-        let apostrophe_key = &layout.keys[0][0];
-
-        assert!(apostrophe_key.matches_char('"', &layout));
+        assert_eq!(resolve(&layout, '\''), (0, 0, KeyLevel::Base));
     }
 
     #[test]
-    fn test_matches_char_altgr_when_no_base() {
+    fn test_resolve_char_shift() {
         let layout = create_test_layout();
-        let apostrophe_key = &layout.keys[0][0];
-
-        // ´ only exists as altgr, so it should match
-        assert!(apostrophe_key.matches_char('´', &layout));
+        assert_eq!(resolve(&layout, '"'), (0, 0, KeyLevel::Shift));
     }
 
     #[test]
-    fn test_matches_char_case_insensitive_base() {
+    fn test_resolve_char_altgr_when_no_base() {
+        let layout = create_test_layout();
+        assert_eq!(resolve(&layout, '´'), (0, 0, KeyLevel::AltGr));
+    }
+
+    #[test]
+    fn test_resolve_char_uppercase_without_shift_entry() {
         let mut layout = create_test_layout();
         layout.keys[0].push(KeyInfo {
             base: "a".to_string(),
             label: None,
-            shift: Some("A".to_string()),
+            shift: None,
             altgr: None,
             finger: Finger::LeftPinky,
         });
-
-        let a_key = &layout.keys[0][3];
-        assert!(a_key.matches_char('a', &layout));
-        assert!(a_key.matches_char('A', &layout));
+        assert_eq!(resolve(&layout, 'a'), (0, 3, KeyLevel::Base));
+        assert_eq!(resolve(&layout, 'A'), (0, 3, KeyLevel::Shift));
     }
 
     #[test]
-    fn test_matches_char_space_never_matches() {
-        let layout = create_test_layout();
-        let key = &layout.keys[0][0];
+    fn test_resolve_char_empty_levels_never_match() {
+        let layout = KeyboardLayout::load_from_json(crate::language::Language::Fr).unwrap();
+        // The "²" key has empty shift and altgr levels.
+        assert_eq!(resolve(&layout, '²'), (0, 0, KeyLevel::Base));
+        assert!(layout.resolve_char('\u{0}').is_none());
+    }
 
-        assert!(!key.matches_char(' ', &layout));
+    #[test]
+    fn test_resolve_char_space_is_not_a_key() {
+        let layout = create_test_layout();
+        assert!(layout.resolve_char(' ').is_none());
+    }
+
+    #[test]
+    fn test_resolve_char_us() {
+        let layout = KeyboardLayout::load_from_json(crate::language::Language::Us).unwrap();
+        assert_eq!(resolve(&layout, 'a').2, KeyLevel::Base);
+        assert_eq!(resolve(&layout, '1').2, KeyLevel::Base);
+        assert_eq!(resolve(&layout, 'A').2, KeyLevel::Shift);
+        assert_eq!(resolve(&layout, '!').2, KeyLevel::Shift);
+        assert_eq!(resolve(&layout, 'a').0, resolve(&layout, 'A').0);
+        assert_eq!(resolve(&layout, 'a').1, resolve(&layout, 'A').1);
+    }
+
+    #[test]
+    fn test_resolve_char_es() {
+        let layout = KeyboardLayout::load_from_json(crate::language::Language::Es).unwrap();
+        assert_eq!(resolve(&layout, '€').2, KeyLevel::AltGr);
+        assert_eq!(resolve(&layout, '[').2, KeyLevel::AltGr);
+        assert_eq!(resolve(&layout, 'ñ').2, KeyLevel::Base);
+        assert_eq!(resolve(&layout, 'Ñ').2, KeyLevel::Shift);
+        let (row, col, level) = resolve(&layout, '¨');
+        assert_eq!(layout.keys[row][col].base, "´");
+        assert_eq!(level, KeyLevel::Shift);
+    }
+
+    #[test]
+    fn test_resolve_char_fr() {
+        let layout = KeyboardLayout::load_from_json(crate::language::Language::Fr).unwrap();
+        assert_eq!(resolve(&layout, '&'), (0, 1, KeyLevel::Base));
+        assert_eq!(resolve(&layout, '1'), (0, 1, KeyLevel::Shift));
+    }
+
+    #[test]
+    fn test_modifier_keys_shift_opposite_hand() {
+        let layout = KeyboardLayout::load_from_json(crate::language::Language::Us).unwrap();
+        assert_eq!(modifier_keys(&layout, 'A'), vec!["shift_right"]);
+        assert_eq!(modifier_keys(&layout, 'P'), vec!["shift_left"]);
+        assert_eq!(modifier_keys(&layout, '"'), vec!["shift_left"]);
+        assert!(modifier_keys(&layout, 'a').is_empty());
+    }
+
+    #[test]
+    fn test_modifier_keys_altgr() {
+        let layout = KeyboardLayout::load_from_json(crate::language::Language::Es).unwrap();
+        let target = layout.resolve_char('€').unwrap();
+        assert_eq!(layout.modifier_keys_for(&target), vec!["alt_right"]);
+        assert_eq!(
+            layout.modifier_finger_for(&target),
+            Some(Finger::RightThumb)
+        );
+    }
+
+    #[test]
+    fn test_modifier_finger_shift() {
+        let layout = KeyboardLayout::load_from_json(crate::language::Language::Us).unwrap();
+        let target = layout.resolve_char('A').unwrap();
+        assert_eq!(
+            layout.modifier_finger_for(&target),
+            Some(Finger::RightPinky)
+        );
+    }
+
+    #[test]
+    fn test_modifier_keys_both_thumbs_uses_both_shifts() {
+        let layout = KeyboardLayout::load_from_json(crate::language::Language::Us).unwrap();
+        let target = ResolvedKey {
+            row: 0,
+            col: 0,
+            finger: Finger::BothThumbs,
+            level: KeyLevel::Shift,
+        };
+        assert_eq!(
+            layout.modifier_keys_for(&target),
+            vec!["shift_left", "shift_right"]
+        );
+    }
+
+    #[test]
+    fn test_modifier_keys_missing_from_layout() {
+        let layout = create_test_layout();
+        assert!(modifier_keys(&layout, '"').is_empty());
+        assert!(modifier_keys(&layout, '´').is_empty());
     }
 
     #[test]
@@ -614,6 +672,7 @@ mod imp {
     #[properties(wrapper_type = super::KeyboardWidget)]
     pub struct KeyboardWidget {
         pub current_key: RefCell<Option<char>>,
+        pub current_target: RefCell<Option<ResolvedKey>>,
         pub visible_keys: RefCell<Option<HashSet<char>>>,
         pub current_key_sequence: RefCell<Vec<char>>,
         pub sequence_index: RefCell<usize>,
@@ -700,6 +759,7 @@ mod imp {
                 snapshot,
                 &widget,
                 &self.current_key,
+                &self.current_target,
                 &self.layout,
                 &self.visible_keys,
                 &self.cached_colors,
@@ -720,6 +780,8 @@ mod imp {
         /// `layout-language` setter: load the matching layout JSON directly.
         fn set_layout_language_prop(&self, language: crate::language::Language) {
             let layout = KeyboardLayout::load_from_json(language).unwrap_or_default();
+            let current = *self.current_key.borrow();
+            *self.current_target.borrow_mut() = current.and_then(|c| layout.resolve_char(c));
             *self.layout.borrow_mut() = layout;
             self.layout_language.set(language);
             let obj = self.obj();
@@ -760,6 +822,14 @@ mod imp {
             colors.insert(
                 "keyboard-key-current".to_string(),
                 lookup("keyboard-key-current-color"),
+            );
+            colors.insert(
+                "keyboard-modifier-current".to_string(),
+                lookup("keyboard-modifier-current-color"),
+            );
+            colors.insert(
+                "keyboard-modifier-current-text".to_string(),
+                lookup("keyboard-modifier-current-text-color"),
             );
             colors.insert(
                 "keyboard-border".to_string(),
@@ -1006,6 +1076,7 @@ mod imp {
             snapshot: &gtk::Snapshot,
             widget: &super::KeyboardWidget,
             current_key: &RefCell<Option<char>>,
+            current_target: &RefCell<Option<ResolvedKey>>,
             layout: &RefCell<KeyboardLayout>,
             visible_keys: &RefCell<Option<HashSet<char>>>,
             cached_colors: &RefCell<Option<HashMap<String, gdk::RGBA>>>,
@@ -1030,6 +1101,8 @@ mod imp {
             let key_current_text_color = colors["keyboard-key-current-text"];
             let key_current_color = colors["keyboard-key-current"];
             let key_border_color = colors["keyboard-border"];
+            let modifier_current_color = colors["keyboard-modifier-current"];
+            let modifier_current_text_color = colors["keyboard-modifier-current-text"];
 
             let settings = gio::Settings::new(crate::config::APPLICATION_ID);
             let use_finger_colors = settings.boolean("use-finger-colors");
@@ -1045,9 +1118,16 @@ mod imp {
 
             let current = current_key.borrow();
 
-            let is_key_current = |key_info: &KeyInfo| -> bool {
-                current.is_some_and(|c| key_info.matches_char(c, &layout_borrowed))
+            let target = *current_target.borrow();
+
+            let is_key_current = |row: usize, col: usize| -> bool {
+                target.is_some_and(|t| t.row == row && t.col == col)
             };
+
+            let required_modifiers = target
+                .map(|t| layout_borrowed.modifier_keys_for(&t))
+                .unwrap_or_default();
+            let is_modifier_current = |name: &str| required_modifiers.contains(&name);
 
             let should_show_key = |key_info: &KeyInfo| -> bool {
                 visible_keys_borrowed.as_ref().is_none_or(|visible| {
@@ -1108,7 +1188,7 @@ mod imp {
             let mut x = 0.0;
             let y = 0.0;
             if let Some(row) = layout_borrowed.keys.first() {
-                for key_info in row {
+                for (col, key_info) in row.iter().enumerate() {
                     Self::draw_single_key(
                         snapshot,
                         &pango_context,
@@ -1118,7 +1198,7 @@ mod imp {
                         key_height,
                         Some(key_info),
                         None,
-                        is_key_current(key_info),
+                        is_key_current(0, col),
                         should_show_key(key_info),
                         &key_current_color,
                         &key_text_color,
@@ -1173,7 +1253,7 @@ mod imp {
                 x += key_width * 1.5 + key_spacing;
             }
             if let Some(row) = layout_borrowed.keys.get(1) {
-                for key_info in row {
+                for (col, key_info) in row.iter().enumerate() {
                     Self::draw_single_key(
                         snapshot,
                         &pango_context,
@@ -1183,7 +1263,7 @@ mod imp {
                         key_height,
                         Some(key_info),
                         None,
-                        is_key_current(key_info),
+                        is_key_current(1, col),
                         should_show_key(key_info),
                         &key_current_color,
                         &key_text_color,
@@ -1241,7 +1321,7 @@ mod imp {
                 x += key_width * 1.75 + key_spacing;
             }
             if let Some(row) = layout_borrowed.keys.get(2) {
-                for key_info in row {
+                for (col, key_info) in row.iter().enumerate() {
                     Self::draw_single_key(
                         snapshot,
                         &pango_context,
@@ -1251,7 +1331,7 @@ mod imp {
                         key_height,
                         Some(key_info),
                         None,
-                        is_key_current(key_info),
+                        is_key_current(2, col),
                         should_show_key(key_info),
                         &key_current_color,
                         &key_text_color,
@@ -1304,18 +1384,18 @@ mod imp {
                     key_height,
                     None,
                     Some(&shift_l.label),
-                    false,
+                    is_modifier_current("shift_left"),
                     true,
-                    &key_current_color,
+                    &modifier_current_color,
                     &modifier_text_color,
-                    &key_current_text_color,
+                    &modifier_current_text_color,
                     &key_border_color,
                     &modifier_color,
                 );
                 x += key_width * 1.25 + key_spacing;
             }
             if let Some(row) = layout_borrowed.keys.get(3) {
-                for key_info in row {
+                for (col, key_info) in row.iter().enumerate() {
                     Self::draw_single_key(
                         snapshot,
                         &pango_context,
@@ -1325,7 +1405,7 @@ mod imp {
                         key_height,
                         Some(key_info),
                         None,
-                        is_key_current(key_info),
+                        is_key_current(3, col),
                         should_show_key(key_info),
                         &key_current_color,
                         &key_text_color,
@@ -1346,11 +1426,11 @@ mod imp {
                     key_height,
                     None,
                     Some(&shift_r.label),
-                    false,
+                    is_modifier_current("shift_right"),
                     true,
-                    &key_current_color,
+                    &modifier_current_color,
                     &modifier_text_color,
-                    &key_current_text_color,
+                    &modifier_current_text_color,
                     &key_border_color,
                     &modifier_color,
                 );
@@ -1449,11 +1529,11 @@ mod imp {
                     key_height,
                     None,
                     Some(&alt_r.label),
-                    false,
+                    is_modifier_current("alt_right"),
                     true,
-                    &key_current_color,
+                    &modifier_current_color,
                     &modifier_text_color,
-                    &key_current_text_color,
+                    &modifier_current_text_color,
                     &key_border_color,
                     &modifier_color,
                 );
@@ -1535,58 +1615,67 @@ impl KeyboardWidget {
 
     pub fn set_current_key(&self, key: Option<char>) {
         let imp = self.imp();
-        if let Some(ch) = key {
-            // Only decompose if the character doesn't exist in the layout
-            if !imp.layout.borrow().contains_character(ch) {
-                if let Some((spacing_accent, base)) = decompose_with_spacing_accent(ch) {
-                    *imp.current_key_sequence.borrow_mut() = vec![spacing_accent, base];
-                    *imp.sequence_index.borrow_mut() = 0;
-                    *imp.current_key.borrow_mut() = Some(spacing_accent);
-                } else {
-                    *imp.current_key_sequence.borrow_mut() = Vec::new();
-                    *imp.sequence_index.borrow_mut() = 0;
-                    *imp.current_key.borrow_mut() = key;
+        let (sequence, current) = match key {
+            Some(ch) if !imp.layout.borrow().contains_character(ch) => {
+                match decompose_with_spacing_accent(ch) {
+                    Some((spacing_accent, base)) => {
+                        (vec![spacing_accent, base], Some(spacing_accent))
+                    }
+                    None => (Vec::new(), key),
                 }
-            } else {
-                *imp.current_key_sequence.borrow_mut() = Vec::new();
-                *imp.sequence_index.borrow_mut() = 0;
-                *imp.current_key.borrow_mut() = key;
             }
+            _ => (Vec::new(), key),
+        };
+        *imp.current_key_sequence.borrow_mut() = sequence;
+        *imp.sequence_index.borrow_mut() = 0;
+        self.set_target_char(current);
 
-            // Track last finger for non-space characters
-            if ch != ' '
-                && let Some(finger) = imp.layout.borrow().get_finger_for_char(ch)
-                && finger != Finger::BothThumbs
-            {
-                *imp.last_finger.borrow_mut() = Some(finger);
-            }
-        } else {
-            *imp.current_key_sequence.borrow_mut() = Vec::new();
-            *imp.sequence_index.borrow_mut() = 0;
-            *imp.current_key.borrow_mut() = None;
+        if let Some(ch) = key
+            && ch != ' '
+            && let Some(finger) = imp.layout.borrow().get_finger_for_char(ch)
+            && finger != Finger::BothThumbs
+        {
+            *imp.last_finger.borrow_mut() = Some(finger);
         }
         self.queue_draw();
     }
 
     pub fn advance_sequence(&self) {
         let imp = self.imp();
-        let sequence = imp.current_key_sequence.borrow();
-        let mut index = imp.sequence_index.borrow_mut();
-
-        if !sequence.is_empty() && *index < sequence.len() - 1 {
-            *index += 1;
-            let ch = sequence[*index];
-            *imp.current_key.borrow_mut() = Some(ch);
-
-            // Track last finger for the current character in the sequence
-            if let Some(finger) = imp.layout.borrow().get_finger_for_char(ch)
-                && finger != Finger::BothThumbs
-            {
-                *imp.last_finger.borrow_mut() = Some(finger);
+        let next = {
+            let sequence = imp.current_key_sequence.borrow();
+            let mut index = imp.sequence_index.borrow_mut();
+            if sequence.is_empty() || *index >= sequence.len() - 1 {
+                return;
             }
+            *index += 1;
+            sequence[*index]
+        };
+        self.set_target_char(Some(next));
 
-            self.queue_draw();
+        if let Some(finger) = imp.layout.borrow().get_finger_for_char(next)
+            && finger != Finger::BothThumbs
+        {
+            *imp.last_finger.borrow_mut() = Some(finger);
         }
+        self.queue_draw();
+    }
+
+    fn set_target_char(&self, ch: Option<char>) {
+        let imp = self.imp();
+        *imp.current_key.borrow_mut() = ch;
+        *imp.current_target.borrow_mut() = ch.and_then(|c| imp.layout.borrow().resolve_char(c));
+    }
+
+    pub fn current_finger(&self) -> Option<Finger> {
+        let current = *self.imp().current_key.borrow();
+        current.and_then(|ch| self.get_finger_for_char(ch))
+    }
+
+    pub fn current_modifier_finger(&self) -> Option<Finger> {
+        let imp = self.imp();
+        let target = *imp.current_target.borrow();
+        target.and_then(|t| imp.layout.borrow().modifier_finger_for(&t))
     }
 
     pub fn set_visible_keys(&self, keys: Option<HashSet<char>>) {

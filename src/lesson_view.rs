@@ -164,12 +164,7 @@ impl imp::LessonView {
                     let imp = lesson_view.imp();
                     let next_char = next_char_str.chars().next();
                     imp.keyboard_widget.set_current_key(next_char);
-
-                    // Get finger for the actual current key (might be dead key after decomposition)
-                    let current_key = *imp.keyboard_widget.imp().current_key.borrow();
-                    let finger =
-                        current_key.and_then(|ch| imp.keyboard_widget.get_finger_for_char(ch));
-                    imp.hand_widget.set_current_finger(finger);
+                    lesson_view.update_hand_widget();
                 }
             ),
         );
@@ -183,12 +178,7 @@ impl imp::LessonView {
                 move |_: TypingRow| {
                     let imp = lesson_view.imp();
                     imp.keyboard_widget.advance_sequence();
-
-                    // Update hand widget for the next character in the sequence
-                    if let Some(current_key) = *imp.keyboard_widget.imp().current_key.borrow() {
-                        let finger = imp.keyboard_widget.get_finger_for_char(current_key);
-                        imp.hand_widget.set_current_finger(finger);
-                    }
+                    lesson_view.update_hand_widget();
                 }
             ),
         );
@@ -246,6 +236,14 @@ glib::wrapper! {
 impl LessonView {
     pub fn new() -> Self {
         glib::Object::new()
+    }
+
+    fn update_hand_widget(&self) {
+        let imp = self.imp();
+        imp.hand_widget
+            .set_current_finger(imp.keyboard_widget.current_finger());
+        imp.hand_widget
+            .set_modifier_finger(imp.keyboard_widget.current_modifier_finger());
     }
 
     fn setup_title_updates(&self) {
