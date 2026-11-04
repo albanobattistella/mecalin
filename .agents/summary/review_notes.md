@@ -51,5 +51,5 @@
 
 1. **For agents modifying visual appearance**: Read `resources/style.css` directly — it contains the complete color system.
 2. **For agents working on i18n**: Read `src/text_generation.rs` for the full `Language` enum and `src/course.rs` for the language match arms.
-3. **For agents adding keyboard layouts**: Read an existing layout JSON (e.g., `data/keyboard_layouts/us.json`) and `src/keyboard_widget.rs` for the `KeyInfo`/`KeyboardLayout` deserialization.
+3. **For agents adding keyboard layouts**: Read an existing layout JSON (e.g., `data/keyboard_layouts/us.json`) and `src/keyboard_layout.rs` for the `KeyInfo`/`KeyboardLayout` deserialization.
 4. **Verify `typing_test_utils.rs` settings**: The `session-type`, `text-language`, and `session-duration` keys referenced in `TestConfig::from_settings()` should be verified against the actual GSettings schema to determine if they are active or vestigial.

@@ -2,6 +2,7 @@ mod application;
 mod course;
 mod course_completion_view;
 mod hand_widget;
+mod keyboard_layout;
 mod keyboard_widget;
 mod language;
 mod lesson_view;

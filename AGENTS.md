@@ -30,7 +30,8 @@ src/                        # Rust source
 ├── window.rs               # TeclasWindow (NavigationView hub)
 ├── lesson_view.rs          # Structured lessons (most complex view)
 ├── course.rs               # Lesson data model, loads JSON by locale
-├── keyboard_widget.rs      # Visual keyboard (largest file, custom rendering)
+├── keyboard_layout.rs      # Keyboard layout model (keys, fingers, char → key/level resolution)
+├── keyboard_widget.rs      # Visual keyboard (custom rendering)
 ├── hand_widget.rs          # Hand position guide (custom rendering)
 ├── typing_row.rs           # Text input widget for lessons
 ├── utils.rs                # Locale detection, Unicode decomposition
@@ -74,7 +75,8 @@ build.rs                    # Config generation + GResource compilation
 | Add a new view/page | `src/window.rs` + `resources/ui/window.ui`, then model after `src/about_view.rs` |
 | Modify lesson behavior | `src/lesson_view.rs` (flow), `src/course.rs` (data), `src/typing_row.rs` (input) |
 | Change keyboard rendering | `src/keyboard_widget.rs`, `data/keyboard_layouts/*.json` |
-| Add a new language | `src/utils.rs` (`Language` enum variant + `as_code`/`from_code` + `language_from_locale`/`language_from_layout_name` mapping), `src/course.rs` + `src/keyboard_widget.rs` (match arms), `po/LINGUAS`, `data/lessons/`, `data/keyboard_layouts/` |
+| Change which key/modifier types a character | `src/keyboard_layout.rs` (`resolve_char`, `modifier_keys_for`) |
+| Add a new language | `src/utils.rs` (`Language` enum variant + `as_code`/`from_code` + `language_from_locale`/`language_from_layout_name` mapping), `src/course.rs` + `src/keyboard_layout.rs` (match arms), `po/LINGUAS`, `data/lessons/`, `data/keyboard_layouts/` |
 | Change visual styling | `resources/style.css` (semantic color vars for keyboard, hand, finger colors) |
 | Update settings | `data/io.github.nacho.teclas.gschema.xml` + consuming component |
 

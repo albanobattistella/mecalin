@@ -1,4 +1,4 @@
-use crate::keyboard_widget::Finger;
+use crate::keyboard_layout::Finger;
 use gtk::gdk;
 use gtk::glib;
 use gtk::prelude::*;
