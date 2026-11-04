@@ -58,14 +58,20 @@
       {"base": "!", "shift": "§", "altgr": "", "finger": "right_pinky"}
     ]
   ],
+  "space": {"base": " ", "label": "ESPACE", "finger": "both_thumbs"},
   "modifiers": {
-    "shift": {
-      "label": "Shift",
-      "keys": ["ShiftLeft", "ShiftRight"]
-    },
-    "altgr": {
-      "label": "AltGr",
-      "keys": ["AltRight"]
-    }
+    "tab": {"label": "Tab", "finger": "left_pinky"},
+    "caps_lock": {"label": "Verr Maj", "finger": "left_pinky"},
+    "shift_left": {"label": "Maj", "finger": "left_pinky"},
+    "shift_right": {"label": "Maj", "finger": "right_pinky"},
+    "ctrl_left": {"label": "Ctrl", "finger": "left_pinky"},
+    "ctrl_right": {"label": "Ctrl", "finger": "right_pinky"},
+    "super_left": {"label": "Super", "finger": "left_thumb"},
+    "super_right": {"label": "Super", "finger": "right_thumb"},
+    "menu": {"label": "Menu", "finger": "right_pinky"},
+    "alt_left": {"label": "Alt", "finger": "left_thumb"},
+    "alt_right": {"label": "Alt Gr", "finger": "right_thumb"},
+    "enter": {"label": "Entrée", "finger": "right_pinky", "rows": [1, 2]},
+    "backspace": {"label": "Retour arrière", "finger": "right_pinky"}
   }
 }

@@ -356,6 +356,38 @@ mod tests {
     }
 
     #[test]
+    fn test_load_from_json_fr() {
+        let layout = KeyboardLayout::load_from_json(crate::language::Language::Fr).unwrap();
+        assert_eq!(layout.name, "French AZERTY");
+        assert!(layout.modifiers.contains_key("shift_left"));
+        assert!(layout.modifiers.contains_key("alt_right"));
+        let enter = layout.modifiers.get("enter").unwrap();
+        assert!(enter.spans_row(1));
+        assert!(enter.spans_row(2));
+    }
+
+    #[test]
+    fn test_all_layouts_load() {
+        use crate::language::Language;
+        let expected = [
+            (Language::Us, "US QWERTY"),
+            (Language::Es, "Spanish QWERTY"),
+            (Language::De, "German QWERTZ"),
+            (Language::Fr, "French AZERTY"),
+            (Language::Gl, "Galician QWERTY"),
+            (Language::It, "Italian QWERTY"),
+            (Language::Pl, "Polish QWERTY"),
+            (Language::Pt, "Portuguese QWERTY"),
+            (Language::PtBr, "Brazilian ABNT2"),
+        ];
+        for (language, name) in expected {
+            let layout = KeyboardLayout::load_from_json(language)
+                .unwrap_or_else(|e| panic!("{language:?} layout failed to load: {e}"));
+            assert_eq!(layout.name, name);
+        }
+    }
+
+    #[test]
     fn test_contains_character_spanish() {
         let layout = KeyboardLayout::load_from_json(crate::language::Language::Es).unwrap();
 
