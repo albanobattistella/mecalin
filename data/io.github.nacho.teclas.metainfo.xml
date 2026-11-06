@@ -120,6 +120,15 @@
   </screenshots>
   
   <releases>
+    <release version="3.1.0" date="2026-11-06">
+      <description>
+        <ul>
+          <li>The on-screen keyboard and hand guide now highlight the Shift or AltGr key needed to type the next character</li>
+          <li>Fixed the French keyboard layout failing to load</li>
+          <li>Updated dependencies</li>
+        </ul>
+      </description>
+    </release>
     <release version="3.0.0" date="2026-10-30">
       <description>
         <p>
