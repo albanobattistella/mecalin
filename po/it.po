@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: teclas\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-30 09:03+0000\n"
-"PO-Revision-Date: 2026-02-01 21:31+0200\n"
+"PO-Revision-Date: 2026-11-10 21:31+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -118,7 +118,7 @@ msgstr "_Inizia"
 
 #: src/application.rs:86
 msgid "translator-credits"
-msgstr ""
+msgstr "Albano Battistella"
 
 #: src/application.rs:92
 msgid "Learn geography"
@@ -127,12 +127,12 @@ msgstr "Impara la geografia"
 #: src/lesson_view.rs:270
 #, rust-format
 msgid "Lesson {}: Step {}/{}"
-msgstr ""
+msgstr "Lezione {}: Passo {}/{}"
 
 #: src/lesson_view.rs:460
 #, rust-format
 msgid "{}/{} Good"
-msgstr ""
+msgstr "{}/{} Bravo"
 
 #: src/lessons_view.rs:96
 msgid "Your system keyboard layout isn’t supported yet — showing US English"
